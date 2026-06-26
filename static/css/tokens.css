@@ -20,8 +20,8 @@
   --color-nav-bg: rgba(245, 247, 251, 0.72);
   --color-panel-border: rgba(255, 255, 255, 0.7);
 
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono", "Courier New", monospace;
 
   --radius-sm: 8px;
   --radius-md: 12px;

@@ -3,19 +3,26 @@
  * Usage: initDynamicBg('#ambient-canvas')
  */
 
+function getThemeHue() {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue('--theme-hue').trim();
+  const hue = parseInt(raw, 10);
+  return Number.isFinite(hue) ? hue : 152;
+}
+
 function getBgTheme() {
   return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
 }
 
 function getPalettes(theme) {
+  const h = getThemeHue();
   if (theme === 'dark') {
     return {
       base: ['#0a0a12', '#12121f', '#1a1030'],
       waves: [
-        { color: 'rgba(64, 156, 255, 0.35)', amp: 38, freq: 0.004, speed: 0.018, y: 0.28 },
-        { color: 'rgba(175, 82, 222, 0.28)', amp: 52, freq: 0.003, speed: 0.012, y: 0.52 },
-        { color: 'rgba(48, 209, 208, 0.22)', amp: 44, freq: 0.005, speed: 0.022, y: 0.72 },
-        { color: 'rgba(255, 159, 10, 0.15)', amp: 30, freq: 0.006, speed: 0.015, y: 0.42 },
+        { color: `hsla(${h}, 72%, 58%, 0.32)`, amp: 38, freq: 0.004, speed: 0.018, y: 0.28 },
+        { color: `hsla(${(h + 90) % 360}, 68%, 55%, 0.26)`, amp: 52, freq: 0.003, speed: 0.012, y: 0.52 },
+        { color: `hsla(${(h + 180) % 360}, 65%, 52%, 0.2)`, amp: 44, freq: 0.005, speed: 0.022, y: 0.72 },
+        { color: `hsla(${(h + 45) % 360}, 70%, 58%, 0.14)`, amp: 30, freq: 0.006, speed: 0.015, y: 0.42 },
       ],
       dots: 'rgba(255, 255, 255, 0.06)',
     };
@@ -23,10 +30,10 @@ function getPalettes(theme) {
   return {
     base: ['#e8f4fd', '#f0e6ff', '#fff0f5'],
     waves: [
-      { color: 'rgba(0, 113, 227, 0.22)', amp: 42, freq: 0.004, speed: 0.016, y: 0.30 },
-      { color: 'rgba(175, 82, 222, 0.18)', amp: 55, freq: 0.003, speed: 0.011, y: 0.55 },
-      { color: 'rgba(48, 209, 208, 0.20)', amp: 48, freq: 0.005, speed: 0.020, y: 0.75 },
-      { color: 'rgba(255, 149, 0, 0.14)', amp: 35, freq: 0.006, speed: 0.014, y: 0.45 },
+      { color: `hsla(${h}, 70%, 52%, 0.22)`, amp: 42, freq: 0.004, speed: 0.016, y: 0.30 },
+      { color: `hsla(${(h + 90) % 360}, 68%, 55%, 0.18)`, amp: 55, freq: 0.003, speed: 0.011, y: 0.55 },
+      { color: `hsla(${(h + 180) % 360}, 65%, 50%, 0.2)`, amp: 48, freq: 0.005, speed: 0.020, y: 0.75 },
+      { color: `hsla(${(h + 45) % 360}, 72%, 55%, 0.14)`, amp: 35, freq: 0.006, speed: 0.014, y: 0.45 },
     ],
     dots: 'rgba(0, 0, 0, 0.04)',
   };
@@ -126,12 +133,14 @@ function initDynamicBg(canvasSelector, options = {}) {
 
   window.addEventListener('resize', onResize);
   window.addEventListener('themechange', onTheme);
+  window.addEventListener('themeconfigchange', onTheme);
 
   return {
     destroy() {
       if (animationId) cancelAnimationFrame(animationId);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('themechange', onTheme);
+      window.removeEventListener('themeconfigchange', onTheme);
     },
   };
 }

@@ -252,6 +252,19 @@
 
 /* ── 收藏页 ── */
 @media (max-width: 768px) {
+  .bookmarks-toolbar {
+    max-width: none;
+  }
+
+  .bookmarks-add {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bookmarks-add__btn {
+    width: 100%;
+  }
+
   .bookmark-grid {
     max-width: none;
   }

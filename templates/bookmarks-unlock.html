@@ -4,15 +4,12 @@
   {% include "partials/head.html" %}
   <title>访问收藏 — Personal Blog</title>
 </head>
-<body class="site-page">
+<body class="site-page firefly-page">
   {% include "partials/page-bg.html" %}
+  {% include "partials/firefly-nav.html" %}
 
-  <header class="bookmarks-unlock__top">
-    <a href="/pages/" class="bookmarks-unlock__home">← 返回主页</a>
-  </header>
-
-  <main class="page bookmarks-unlock__main">
-    <div class="unlock-card">
+  <div class="firefly-layout firefly-layout--centered">
+    <div class="firefly-card firefly-page-panel unlock-card">
       <div class="unlock-card__icon">🔒</div>
       <h2 class="mb-lg">收藏页需要密码</h2>
       <p class="text-secondary mb-lg">请输入访问密码以查看网站收藏</p>
@@ -25,10 +22,9 @@
         <button type="submit" class="btn btn--primary" style="width:100%">解锁</button>
       </form>
     </div>
-  </main>
+  </div>
 
   {% include "partials/site-scripts.html" %}
-  <script src="/static/js/api.js"></script>
   <script>
     document.getElementById('bookmarks-unlock-form').addEventListener('submit', async (e) => {
       e.preventDefault();

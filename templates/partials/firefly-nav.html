@@ -8,10 +8,10 @@
     <button type="button" class="firefly-nav__toggle" id="nav-toggle" aria-label="菜单">☰</button>
 
     <div class="firefly-nav__links" id="nav-links">
-      <a href="/pages/" class="firefly-nav__link is-active">🏠 主页</a>
-      <a href="/pages/blog/list" class="firefly-nav__link">📄 文章</a>
-      <a href="/pages/notes/list" class="firefly-nav__link">📝 笔记</a>
-      <a href="/pages/tags/" class="firefly-nav__link">🏷 标签</a>
+      <a href="/pages/" class="firefly-nav__link {% if active == 'home' %}is-active{% endif %}">🏠 主页</a>
+      <a href="/pages/blog/list" class="firefly-nav__link {% if active == 'blog' %}is-active{% endif %}">📄 文章</a>
+      <a href="/pages/notes/list" class="firefly-nav__link {% if active == 'notes' %}is-active{% endif %}">📝 笔记</a>
+      <a href="/pages/tags/" class="firefly-nav__link {% if active == 'tags' %}is-active{% endif %}">🏷 标签</a>
     </div>
 
     <div class="firefly-nav__actions">

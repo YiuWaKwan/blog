@@ -4,14 +4,19 @@
   {% include "partials/head.html" %}
   <title>博客 — Personal Blog</title>
 </head>
-<body class="site-page">
+<body class="site-page firefly-page">
   {% include "partials/page-bg.html" %}
   {% set active = 'blog' %}
-  {% include "partials/nav.html" %}
+  {% include "partials/firefly-nav.html" %}
 
-  <main class="page">
-    <div class="container">
-      <h1 class="mb-lg">博客</h1>
+  <div class="firefly-layout">
+    {% include "partials/firefly-sidebar-left.html" %}
+
+    <main class="firefly-layout__main">
+      <header class="firefly-page-header">
+        <h1 class="firefly-page-header__title">博客</h1>
+      </header>
+
       <div class="layout-with-sidebar">
         {% set tags = [
           {'name': 'Python', 'slug': 'python', 'total_count': 12},
@@ -22,18 +27,17 @@
         {% set current_tag = request.query_params.get('tag') if request else none %}
         {% include "partials/tag-filter.html" %}
 
-        <div>
-          <div class="card-grid" id="post-list">
-            <p class="text-secondary">加载中…</p>
-          </div>
+        <div class="firefly-feed" id="post-list">
+          <p class="text-secondary firefly-feed__loading">加载中…</p>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+
+    {% include "partials/firefly-sidebar-right.html" %}
+  </div>
 
   {% include "partials/footer.html" %}
   {% include "partials/site-scripts.html" %}
-  <script src="/static/js/api.js"></script>
   <script src="/static/js/tags.js"></script>
   <script src="/static/js/blog-list.js"></script>
 </body>

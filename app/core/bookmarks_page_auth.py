@@ -8,7 +8,7 @@ import time
 from app.core.config import settings
 
 BOOKMARKS_PAGE_COOKIE_NAME = "bookmarks_page_auth"
-BOOKMARKS_PAGE_MAX_AGE = 86400 * 7
+BOOKMARKS_PAGE_MAX_AGE = 3600 * 2
 
 
 def _signing_key() -> bytes | None:

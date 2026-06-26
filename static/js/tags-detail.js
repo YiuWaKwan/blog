@@ -27,10 +27,15 @@ function renderItem(item) {
     : `/pages/notes/detail?slug=${encodeURIComponent(item.slug)}`;
 
   return `
-    <article class="card">
-      <div class="card__body">
-        <div class="card__meta">${label}${item.published_at ? ' · ' + formatDate(item.published_at) : ''}</div>
-        <h3 class="card__title"><a href="${href}">${escapeHtml(item.title)}</a></h3>
+    <article class="feed-card feed-card--compact">
+      <div class="feed-card__body">
+        <div class="feed-card__meta">
+          <span>${label}</span>
+          ${item.published_at ? `<span>📅 ${formatDate(item.published_at)}</span>` : ''}
+        </div>
+        <h3 class="feed-card__title">
+          <a href="${href}">${escapeHtml(item.title)}</a>
+        </h3>
       </div>
     </article>
   `;
@@ -62,8 +67,8 @@ async function loadTagDetail(slug, type) {
   if (header) {
     const total = (tag.blog_count || 0) + (tag.note_count || 0);
     header.innerHTML = `
-      <h1>${escapeHtml(tag.name)}</h1>
-      <p class="text-secondary">
+      <h1 class="firefly-page-header__title">${escapeHtml(tag.name)}</h1>
+      <p class="firefly-page-header__desc">
         博客 ${tag.blog_count || 0} · 笔记 ${tag.note_count || 0} · 合计 ${total}
       </p>
     `;

@@ -24,12 +24,14 @@ class BookmarkService(BaseService):
         self,
         tag_slug: str | None = None,
         category_slug: str | None = None,
+        query: str | None = None,
         unlocked_ids: set[str] | None = None,
     ) -> list[BookmarkListItem]:
         with self.read_session() as db:
             bookmarks = BookmarkRepository(db).list_public(
                 tag_slug=tag_slug,
                 category_slug=category_slug,
+                query=query,
             )
 
         unlocked = unlocked_ids or set()
@@ -63,6 +65,33 @@ class BookmarkService(BaseService):
                 )
             )
         return items
+
+    def quick_add_bookmark(self, url: str) -> UUID:
+        cleaned = url.strip()
+        if not cleaned:
+            raise ValueError("URL 不能为空")
+        return self.save_bookmark(SaveBookmarkRequest(url=cleaned))
+
+    def import_bookmarks_from_text(self, text: str) -> dict[str, int | list[str]]:
+        lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+        imported = 0
+        skipped = 0
+        errors: list[str] = []
+
+        for line in lines:
+            raw = line.strip()
+            if not raw or raw.startswith("#"):
+                skipped += 1
+                continue
+
+            url = raw if "://" in raw else f"https://{raw}"
+            try:
+                self.quick_add_bookmark(url)
+                imported += 1
+            except ValueError as exc:
+                errors.append(f"{raw}: {exc}")
+
+        return {"imported": imported, "skipped": skipped, "errors": errors}
 
     def list_categories_for_admin(self) -> list[dict]:
         with self.read_session() as db:

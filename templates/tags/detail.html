@@ -4,32 +4,37 @@
   {% include "partials/head.html" %}
   <title>标签 — Personal Blog</title>
 </head>
-<body class="site-page">
+<body class="site-page firefly-page">
   {% include "partials/page-bg.html" %}
   {% set active = 'tags' %}
-  {% include "partials/nav.html" %}
+  {% include "partials/firefly-nav.html" %}
 
-  <main class="page">
-    <div class="container">
-      <header class="tags-page__header text-center mb-lg" id="tag-header">
+  <div class="firefly-layout">
+    {% include "partials/firefly-sidebar-left.html" %}
+
+    <main class="firefly-layout__main">
+      <header class="firefly-page-header text-center" id="tag-header">
         <p class="text-secondary">加载中…</p>
       </header>
 
-      <div class="tabs">
-        <a href="#" class="tab is-active" data-type="all">全部</a>
-        <a href="#" class="tab" data-type="blog">博客</a>
-        <a href="#" class="tab" data-type="note">笔记</a>
-      </div>
+      <div class="firefly-card firefly-page-panel">
+        <div class="tabs">
+          <a href="#" class="tab is-active" data-type="all">全部</a>
+          <a href="#" class="tab" data-type="blog">博客</a>
+          <a href="#" class="tab" data-type="note">笔记</a>
+        </div>
 
-      <div class="card-grid" id="tag-items">
-        <p class="text-secondary">加载中…</p>
+        <div class="firefly-feed card-grid" id="tag-items" style="margin-top:var(--space-md)">
+          <p class="text-secondary firefly-feed__loading">加载中…</p>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+
+    {% include "partials/firefly-sidebar-right.html" %}
+  </div>
 
   {% include "partials/footer.html" %}
   {% include "partials/site-scripts.html" %}
-  <script src="/static/js/api.js"></script>
   <script src="/static/js/tags-detail.js"></script>
 </body>
 </html>

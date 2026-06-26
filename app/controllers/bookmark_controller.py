@@ -1,9 +1,10 @@
 from typing import Any
 
-from fastapi import APIRouter, Cookie, Depends
+from fastapi import APIRouter, Depends
 
-from app.core.response import success
+from app.core.response import error, success
 from app.dependencies import get_unlocked_bookmark_ids, require_bookmarks_page_access
+from app.schemas.requests.bookmark import AddBookmarkRequest
 from app.services.bookmark_service import BookmarkService
 
 router = APIRouter(prefix="/api", tags=["bookmark"])
@@ -13,12 +14,26 @@ router = APIRouter(prefix="/api", tags=["bookmark"])
 def get_bookmarks(
     tag: str | None = None,
     category: str | None = None,
+    q: str | None = None,
     unlocked_ids: set[str] = Depends(get_unlocked_bookmark_ids),
     _: None = Depends(require_bookmarks_page_access),
 ) -> dict[str, Any]:
     items = BookmarkService().list_bookmarks(
         tag_slug=tag,
         category_slug=category,
+        query=q,
         unlocked_ids=unlocked_ids,
     )
     return success({"list": [item.model_dump() for item in items]})
+
+
+@router.post("/add_bookmark")
+def add_bookmark(
+    body: AddBookmarkRequest,
+    _: None = Depends(require_bookmarks_page_access),
+) -> dict[str, Any]:
+    try:
+        bookmark_id = BookmarkService().quick_add_bookmark(body.url)
+    except ValueError as exc:
+        return error(400, str(exc))
+    return success({"id": str(bookmark_id)})

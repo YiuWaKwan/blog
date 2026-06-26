@@ -13,6 +13,7 @@ class BookmarkRepository(BaseRepository):
         self,
         tag_slug: str | None = None,
         category_slug: str | None = None,
+        query: str | None = None,
     ) -> list[Bookmark]:
         stmt = select(Bookmark).options(
             selectinload(Bookmark.tags),
@@ -24,6 +25,11 @@ class BookmarkRepository(BaseRepository):
         if category_slug:
             stmt = stmt.join(Bookmark.category).where(
                 BookmarkCategory.slug == category_slug
+            )
+        if query:
+            pattern = f"%{query.strip()}%"
+            stmt = stmt.where(
+                Bookmark.title.ilike(pattern) | Bookmark.url.ilike(pattern)
             )
 
         return list(

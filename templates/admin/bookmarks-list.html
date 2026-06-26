@@ -15,6 +15,23 @@
         <a href="/pages/admin/bookmarks-edit" class="btn btn--primary">新建收藏</a>
       </div>
 
+      <details class="admin-import-panel">
+        <summary class="admin-import-panel__summary">批量导入 URL</summary>
+        <form class="admin-import-panel__form" id="bookmarks-import-form">
+          <p class="admin-import-panel__hint">每行一个 URL，空行和以 # 开头的行会跳过。无协议时自动补全 https://</p>
+          <textarea
+            id="bookmarks-import-text"
+            class="form-textarea admin-import-panel__textarea"
+            rows="8"
+            placeholder="https://example.com&#10;github.com/user/repo&#10;# 这是注释，会被跳过"
+          ></textarea>
+          <div class="admin-import-panel__actions">
+            <button type="submit" class="btn btn--primary">导入保存</button>
+            <span id="bookmarks-import-result" class="admin-import-panel__result" hidden></span>
+          </div>
+        </form>
+      </details>
+
       <div class="table-wrapper">
         <table class="admin-table">
           <thead>

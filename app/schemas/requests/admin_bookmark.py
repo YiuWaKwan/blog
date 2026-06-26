@@ -18,3 +18,7 @@ class SaveBookmarkRequest(BaseModel):
 
 class DeleteBookmarkRequest(BaseModel):
     id: UUID
+
+
+class ImportBookmarksRequest(BaseModel):
+    text: str

@@ -29,6 +29,12 @@ function renderBookmark(b) {
   `;
 }
 
+function renderBookmarkList(items, listEl) {
+  listEl.innerHTML = items.length
+    ? items.map(renderBookmark).join('')
+    : '<p class="text-secondary">暂无收藏</p>';
+}
+
 async function copyUrl(url, btn) {
   try {
     await navigator.clipboard.writeText(url);
@@ -52,9 +58,30 @@ async function copyUrl(url, btn) {
   }, 1500);
 }
 
+let searchTimer = null;
+
+async function loadBookmarks(listEl, query = '') {
+  const params = query ? { q: query } : {};
+  const result = await apiGet('/api/get_bookmarks', params);
+  if (result.code === 403) {
+    window.location.reload();
+    return null;
+  }
+  if (result.code !== 0) {
+    listEl.innerHTML = `<p class="text-secondary">${escapeHtml(result.message || '加载失败')}</p>`;
+    return null;
+  }
+  return result.data?.list || [];
+}
+
 async function initBookmarks() {
   const list = document.getElementById('bookmark-list');
   if (!list) return;
+
+  const searchInput = document.getElementById('bookmarks-search-input');
+  const addForm = document.getElementById('bookmarks-add-form');
+  const addUrlInput = document.getElementById('bookmarks-add-url');
+  const addError = document.getElementById('bookmarks-add-error');
 
   list.addEventListener('click', (e) => {
     const btn = e.target.closest('.bookmark-card__copy');
@@ -65,20 +92,57 @@ async function initBookmarks() {
     if (url) copyUrl(url, btn);
   });
 
-  const result = await apiGet('/api/get_bookmarks');
-  if (result.code === 403) {
-    window.location.reload();
-    return;
-  }
-  if (result.code !== 0) {
-    list.innerHTML = `<p class="text-secondary">${escapeHtml(result.message || '加载失败')}</p>`;
-    return;
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(async () => {
+        const query = searchInput.value.trim();
+        list.innerHTML = '<p class="text-secondary">加载中…</p>';
+        const items = await loadBookmarks(list, query);
+        if (items) renderBookmarkList(items, list);
+      }, 300);
+    });
   }
 
-  const items = result.data?.list || [];
-  list.innerHTML = items.length
-    ? items.map(renderBookmark).join('')
-    : '<p class="text-secondary">暂无收藏</p>';
+  if (addForm && addUrlInput) {
+    addForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (addError) {
+        addError.hidden = true;
+        addError.textContent = '';
+      }
+
+      const url = addUrlInput.value.trim();
+      if (!url) return;
+
+      const submitBtn = addForm.querySelector('button[type="submit"]');
+      if (submitBtn) submitBtn.disabled = true;
+
+      const result = await apiPost('/api/add_bookmark', { url });
+      if (submitBtn) submitBtn.disabled = false;
+
+      if (result.code === 403) {
+        window.location.reload();
+        return;
+      }
+      if (result.code !== 0) {
+        if (addError) {
+          addError.textContent = result.message || '保存失败';
+          addError.hidden = false;
+        }
+        return;
+      }
+
+      addUrlInput.value = '';
+      const query = searchInput?.value.trim() || '';
+      list.innerHTML = '<p class="text-secondary">加载中…</p>';
+      const items = await loadBookmarks(list, query);
+      if (items) renderBookmarkList(items, list);
+    });
+  }
+
+  const items = await loadBookmarks(list);
+  if (items) renderBookmarkList(items, list);
 }
 
 document.addEventListener('DOMContentLoaded', initBookmarks);

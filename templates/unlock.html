@@ -4,12 +4,12 @@
   {% include "partials/head.html" %}
   <title>解锁内容 — Personal Blog</title>
 </head>
-<body class="site-page">
+<body class="site-page firefly-page">
   {% include "partials/page-bg.html" %}
-  {% set active = 'unlock' %}
-  {% include "partials/nav.html" %}
-  <main class="page">
-    <div class="unlock-card">
+  {% include "partials/firefly-nav.html" %}
+
+  <div class="firefly-layout firefly-layout--centered">
+    <div class="firefly-card firefly-page-panel unlock-card">
       <div class="unlock-card__icon">🔒</div>
       <h2 class="mb-lg">此内容需要密码</h2>
       <p class="text-secondary mb-lg">请输入访问密码以继续阅读</p>
@@ -24,11 +24,10 @@
         <button type="submit" class="btn btn--primary" style="width:100%">解锁</button>
       </form>
     </div>
-  </main>
+  </div>
 
   {% include "partials/footer.html" %}
   {% include "partials/site-scripts.html" %}
-  <script src="/static/js/api.js"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
     document.getElementById('resource-type').value = params.get('type') || 'blog_post';

@@ -34,17 +34,7 @@ function renderRow(item) {
   `;
 }
 
-async function deleteBookmark(id) {
-  if (!confirm('确定删除这条收藏？')) return;
-  const res = await adminPost('delete_bookmark', { id });
-  if (res.code === 0) {
-    document.querySelector(`tr[data-id="${id}"]`)?.remove();
-    return;
-  }
-  alert(res.message || '删除失败');
-}
-
-async function initAdminBookmarksList() {
+async function loadBookmarksList() {
   const tbody = document.getElementById('bookmarks-list-body');
   if (!tbody) return;
 
@@ -58,10 +48,79 @@ async function initAdminBookmarksList() {
   tbody.innerHTML = items.length
     ? items.map(renderRow).join('')
     : '<tr><td colspan="6">暂无收藏</td></tr>';
+}
+
+async function deleteBookmark(id) {
+  if (!confirm('确定删除这条收藏？')) return;
+  const res = await adminPost('delete_bookmark', { id });
+  if (res.code === 0) {
+    document.querySelector(`tr[data-id="${id}"]`)?.remove();
+    return;
+  }
+  alert(res.message || '删除失败');
+}
+
+async function importBookmarks(text) {
+  const resultEl = document.getElementById('bookmarks-import-result');
+  const submitBtn = document.querySelector('#bookmarks-import-form button[type="submit"]');
+
+  if (resultEl) {
+    resultEl.hidden = true;
+    resultEl.textContent = '';
+    resultEl.className = 'admin-import-panel__result';
+  }
+  if (submitBtn) submitBtn.disabled = true;
+
+  const res = await adminPost('import_bookmarks', { text });
+
+  if (submitBtn) submitBtn.disabled = false;
+
+  if (res.code !== 0) {
+    if (resultEl) {
+      resultEl.textContent = res.message || '导入失败';
+      resultEl.classList.add('is-error');
+      resultEl.hidden = false;
+    }
+    return;
+  }
+
+  const { imported = 0, skipped = 0, errors = [] } = res.data || {};
+  let message = `成功导入 ${imported} 条`;
+  if (skipped) message += `，跳过 ${skipped} 行`;
+  if (errors.length) message += `，失败 ${errors.length} 条`;
+
+  if (resultEl) {
+    resultEl.textContent = message;
+    resultEl.classList.add(errors.length ? 'is-error' : 'is-success');
+    resultEl.hidden = false;
+  }
+
+  if (errors.length) {
+    alert(errors.slice(0, 5).join('\n') + (errors.length > 5 ? `\n…共 ${errors.length} 条失败` : ''));
+  }
+
+  if (imported > 0) {
+    await loadBookmarksList();
+    document.getElementById('bookmarks-import-text').value = '';
+  }
+}
+
+async function initAdminBookmarksList() {
+  const tbody = document.getElementById('bookmarks-list-body');
+  if (!tbody) return;
+
+  await loadBookmarksList();
 
   tbody.addEventListener('click', (e) => {
     const btn = e.target.closest('[data-delete-id]');
     if (btn) deleteBookmark(btn.dataset.deleteId);
+  });
+
+  const importForm = document.getElementById('bookmarks-import-form');
+  importForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = document.getElementById('bookmarks-import-text')?.value || '';
+    await importBookmarks(text);
   });
 }
 

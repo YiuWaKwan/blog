@@ -4,7 +4,11 @@ from uuid import UUID
 from fastapi import APIRouter, HTTPException
 
 from app.core.response import error, success
-from app.schemas.requests.admin_bookmark import DeleteBookmarkRequest, SaveBookmarkRequest
+from app.schemas.requests.admin_bookmark import (
+    DeleteBookmarkRequest,
+    ImportBookmarksRequest,
+    SaveBookmarkRequest,
+)
 from app.services.bookmark_service import BookmarkService
 
 router = APIRouter(prefix="/api/admin", tags=["admin-bookmark"])
@@ -40,6 +44,14 @@ def delete_bookmark(body: DeleteBookmarkRequest) -> dict[str, Any]:
     except ValueError as exc:
         return error(404, str(exc))
     return success()
+
+
+@router.post("/import_bookmarks")
+def import_bookmarks(body: ImportBookmarksRequest) -> dict[str, Any]:
+    if not body.text.strip():
+        return error(400, "导入内容不能为空")
+    result = BookmarkService().import_bookmarks_from_text(body.text)
+    return success(result)
 
 
 @router.get("/get_bookmark_categories")

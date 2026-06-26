@@ -22,15 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    links.querySelectorAll('.nav__link').forEach((link) => {
+    links.querySelectorAll('.nav__link, .firefly-nav__link').forEach((link) => {
       link.addEventListener('click', closeNav);
     });
 
     document.querySelector('.nav__back')?.addEventListener('click', closeNav);
+    document.querySelector('.firefly-nav__brand')?.addEventListener('click', closeNav);
 
     document.addEventListener('click', (e) => {
       if (!links.classList.contains('is-open')) return;
-      if (e.target.closest('.nav__inner')) return;
+      if (e.target.closest('.nav__inner, .firefly-nav__inner')) return;
       closeNav();
     });
 

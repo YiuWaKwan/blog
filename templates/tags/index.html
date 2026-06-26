@@ -4,25 +4,27 @@
   {% include "partials/head.html" %}
   <title>标签 — Personal Blog</title>
 </head>
-<body class="site-page">
+<body class="site-page firefly-page">
   {% include "partials/page-bg.html" %}
   {% set active = 'tags' %}
-  {% include "partials/nav.html" %}
+  {% include "partials/firefly-nav.html" %}
 
-  <main class="page">
-    <div class="container">
-      <header class="tags-page__header">
-        <h1>标签归档</h1>
-        <p class="text-secondary">按使用量浏览所有标签</p>
+  <div class="firefly-layout">
+    {% include "partials/firefly-sidebar-left.html" %}
+
+    <main class="firefly-layout__main">
+      <header class="firefly-page-header text-center">
+        <h1 class="firefly-page-header__title">标签归档</h1>
+        <p class="firefly-page-header__desc">按使用量浏览所有标签</p>
       </header>
 
-      <div class="glass-panel tags-page__cloud">
+      <div class="firefly-card firefly-page-panel tags-page__cloud">
         <div class="tag-cloud" id="tag-cloud">
           <p class="text-secondary">加载中…</p>
         </div>
       </div>
 
-      <div class="glass-panel">
+      <div class="firefly-card firefly-page-panel">
         <h2 class="tags-page__table-title">标签统计</h2>
         <div class="data-table-wrap">
           <table class="data-table">
@@ -40,12 +42,13 @@
           </table>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+
+    {% include "partials/firefly-sidebar-right.html" %}
+  </div>
 
   {% include "partials/footer.html" %}
   {% include "partials/site-scripts.html" %}
-  <script src="/static/js/api.js"></script>
   <script src="/static/js/tags.js"></script>
   <script src="/static/js/tags-index.js"></script>
 </body>
