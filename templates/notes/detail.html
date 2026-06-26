@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>笔记 — Personal Blog</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+  {% set active = 'notes' %}
+  {% include "partials/nav.html" %}
+
+  <main class="page">
+    <article class="container container--read glass-panel" id="note-root" style="margin-top:0">
+      <p class="text-secondary">加载中…</p>
+    </article>
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/notes-detail.js"></script>
+</body>
+</html>

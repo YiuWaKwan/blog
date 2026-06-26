@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>标签 — Personal Blog</title>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+  {% set active = 'tags' %}
+  {% include "partials/nav.html" %}
+
+  <main class="page">
+    <div class="container">
+      <header class="tags-page__header">
+        <h1>标签归档</h1>
+        <p class="text-secondary">按使用量浏览所有标签</p>
+      </header>
+
+      <div class="glass-panel tags-page__cloud">
+        <div class="tag-cloud" id="tag-cloud">
+          <p class="text-secondary">加载中…</p>
+        </div>
+      </div>
+
+      <div class="glass-panel">
+        <h2 class="tags-page__table-title">标签统计</h2>
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>标签</th>
+                <th class="num">博客</th>
+                <th class="num">笔记</th>
+                <th class="num">合计</th>
+              </tr>
+            </thead>
+            <tbody id="tags-table-body">
+              <tr><td colspan="4" class="text-secondary" style="text-align:center">加载中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/tags.js"></script>
+  <script src="/static/js/tags-index.js"></script>
+</body>
+</html>

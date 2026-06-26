@@ -1,0 +1,16 @@
+{# 用法: {% include "partials/tag-filter.html" with context %}
+   tags = [{name, slug, total_count}], current_tag = slug or None #}
+<aside class="tag-filter">
+  <div class="tag-filter__title">标签筛选</div>
+  <div class="tag-filter__list">
+    <a href="{{ base_url | default('?') }}" class="tag-filter__item {% if not current_tag %}is-active{% endif %}">
+      <span>全部</span>
+    </a>
+    {% for tag in tags %}
+    <a href="?tag={{ tag.slug }}" class="tag-filter__item {% if current_tag == tag.slug %}is-active{% endif %}">
+      <span>{{ tag.name }}</span>
+      <span class="text-secondary">{{ tag.total_count }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</aside>

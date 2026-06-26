@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <title>登录 — 后台管理</title>
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-card">
+      <h1 class="login-card__title">后台登录</h1>
+      <!-- API: POST /api/admin/login -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label">用户名</label>
+          <input type="text" name="username" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">密码</label>
+          <input type="password" name="password" class="form-input" required>
+        </div>
+        <button type="submit" class="btn btn--primary" style="width:100%">登录</button>
+      </form>
+    </div>
+  </div>
+  <script src="/static/js/api.js"></script>
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const res = await apiPost('/api/admin/login', {
+        username: fd.get('username'),
+        password: fd.get('password'),
+      });
+      if (res.code === 0) window.location.href = '/pages/admin/dashboard';
+    });
+  </script>
+</body>
+</html>

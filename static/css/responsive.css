@@ -1,0 +1,471 @@
+/**
+ * 全站移动端适配
+ */
+
+/* ── 全局 ── */
+@media (max-width: 768px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .page {
+    padding-top: calc(var(--nav-height) + var(--space-md));
+    padding-bottom: var(--space-xl);
+  }
+
+  .container,
+  .container--read,
+  .container--wide {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  h1 {
+    font-size: clamp(1.625rem, 7vw, 2.25rem);
+  }
+
+  .glass-panel {
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+  }
+
+  .section__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .card__body {
+    padding: var(--space-md);
+  }
+
+  .card:hover {
+    transform: none;
+  }
+
+  .note-list__item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-xs);
+  }
+
+  .article-meta {
+    gap: var(--space-sm);
+  }
+
+  .article-nav {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    scrollbar-width: none;
+    gap: 0;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.875rem;
+  }
+
+  .unlock-card {
+    margin: var(--space-lg) auto;
+    padding: var(--space-lg);
+    max-width: none;
+  }
+
+  .footer {
+    padding: var(--space-lg) 0;
+    font-size: 0.8125rem;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    font-size: 16px;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+
+  .data-table-wrap {
+    margin-left: calc(-1 * var(--space-md));
+    margin-right: calc(-1 * var(--space-md));
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 10px 12px;
+    font-size: 0.875rem;
+  }
+
+  .tags-page__header {
+    margin-bottom: var(--space-lg);
+  }
+
+  .tag-cloud {
+    gap: var(--space-sm) var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .container,
+  .container--read,
+  .container--wide {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+}
+
+/* ── 导航 ── */
+.nav__inner {
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .nav__inner {
+    padding: 0 var(--space-md);
+  }
+
+  .nav__start {
+    gap: var(--space-sm);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .nav__back {
+    font-size: 0.8125rem;
+  }
+
+  .nav__logo {
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .nav__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+  }
+
+  .nav__search {
+    max-width: none;
+    flex: 1;
+    min-width: 0;
+    padding: 8px 12px;
+  }
+
+  .nav__search-input {
+    font-size: 0.875rem;
+  }
+
+  .nav__toggle:active {
+    background: var(--color-tag-bg);
+  }
+
+  .nav__links {
+    display: none;
+    position: absolute;
+    top: calc(var(--nav-height) - 1px);
+    left: calc(-1 * var(--space-md));
+    right: calc(-1 * var(--space-md));
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--color-surface-solid);
+    border-bottom: 1px solid var(--color-border);
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+    gap: 0;
+    box-shadow: var(--shadow-md);
+    max-height: calc(100vh - var(--nav-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav__links.is-open {
+    display: flex;
+  }
+
+  .nav__link {
+    display: block;
+    padding: 12px var(--space-sm);
+    font-size: 1rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .nav__link:active {
+    background: var(--color-tag-bg);
+  }
+
+  .nav__links .theme-toggle {
+    align-self: flex-start;
+    margin-top: var(--space-sm);
+    width: 44px;
+    height: 44px;
+  }
+
+  .nav__links .nav__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+    padding: 0 var(--space-sm);
+  }
+
+  body.nav-open {
+    overflow: hidden;
+  }
+
+  body.admin-nav-open {
+    overflow: hidden;
+  }
+}
+
+/* ── 收藏页 ── */
+@media (max-width: 768px) {
+  .bookmark-grid {
+    max-width: none;
+  }
+
+  .bookmark-card {
+    padding: var(--space-md);
+    gap: var(--space-sm);
+    align-items: flex-start;
+  }
+
+  .bookmark-card__title {
+    font-size: 0.875rem;
+    word-break: break-word;
+  }
+
+  .bookmark-card__copy {
+    padding: 8px 12px;
+    min-height: 36px;
+    min-width: 52px;
+  }
+}
+
+@media (max-width: 380px) {
+  .bookmark-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bookmark-card__copy {
+    align-self: flex-end;
+  }
+}
+
+/* ── Firefly 首页补充 ── */
+@media (max-width: 768px) {
+  .home-page__banner {
+    margin-left: var(--space-md);
+    margin-right: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.8125rem;
+  }
+}
+
+/* ── Landing ── */
+@media (max-width: 768px) {
+  .landing__nav {
+    padding: var(--space-md);
+  }
+
+  .landing__hero {
+    padding: var(--space-xl) var(--space-md);
+  }
+
+  .landing__clock {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: var(--space-md);
+  }
+
+  .landing__actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .landing__cta {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .landing__stats {
+    width: calc(100% - var(--space-md) * 2);
+    margin-left: auto;
+    margin-right: auto;
+    padding: var(--space-md);
+    gap: var(--space-lg);
+  }
+}
+
+/* ── 后台 ── */
+.admin-menu-toggle {
+  display: none;
+}
+
+.admin-sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .admin-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    margin-right: var(--space-sm);
+    padding: 0;
+    font-size: 1.25rem;
+    font-family: inherit;
+    color: var(--color-text);
+    background: var(--color-tag-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 190;
+    background: rgba(0, 0, 0, 0.45);
+  }
+
+  .admin-sidebar-overlay.is-visible {
+    display: block;
+  }
+
+  .admin-sidebar {
+    z-index: 200;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .admin-main {
+    padding: var(--space-md);
+    padding-top: calc(var(--space-md) + env(safe-area-inset-top, 0px));
+  }
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
+  .admin-header__title {
+    font-size: 1.25rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .admin-header .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-header:has(.admin-menu-toggle) {
+    flex-wrap: nowrap;
+  }
+
+  .admin-header:has(.admin-menu-toggle) .btn {
+    width: auto;
+    margin-left: auto;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-table {
+    min-width: 560px;
+    font-size: 0.875rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 10px 12px;
+  }
+
+  .admin-table__url {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-form__actions {
+    flex-direction: column;
+  }
+
+  .admin-form__actions .btn {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-card__value {
+    font-size: 1.5rem;
+  }
+
+  .login-page {
+    padding: var(--space-md);
+  }
+
+  .login-card {
+    padding: var(--space-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-header:has(.admin-menu-toggle) {
+    flex-wrap: wrap;
+  }
+
+  .admin-header:has(.admin-menu-toggle) .btn {
+    width: 100%;
+    margin-left: 0;
+  }
+}

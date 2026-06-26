@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/home.css">
+  <title>博客 — Personal Blog</title>
+</head>
+<body class="site-page home-page firefly-page">
+  {% include "partials/page-bg.html" %}
+  {% include "partials/firefly-nav.html" %}
+
+  <section class="firefly-hero">
+    <div class="firefly-hero__overlay"></div>
+    <div class="firefly-hero__content">
+      <h1 class="firefly-hero__title">探索与记录</h1>
+      <p class="firefly-hero__subtitle">Amidst Silenced Stars, I Deep</p>
+    </div>
+  </section>
+
+  <div class="firefly-layout">
+    <aside class="firefly-layout__left">
+      <div class="firefly-card firefly-profile">
+        <div class="firefly-profile__avatar" aria-hidden="true">G</div>
+        <h2 class="firefly-profile__name">George</h2>
+        <p class="firefly-profile__bio">Hello, I'm George.</p>
+        <div class="firefly-profile__social">
+          <a href="/pages/" class="firefly-profile__social-btn" title="主页">🏠</a>
+          <a href="/pages/tags/" class="firefly-profile__social-btn" title="标签">🏷</a>
+          <a href="/pages/blog/list" class="firefly-profile__social-btn" title="文章">📄</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="firefly-layout__main">
+      <div class="firefly-card firefly-categories" id="category-bar">
+        <a href="/pages/" class="firefly-categories__home is-active" title="全部">🏠</a>
+        <div class="firefly-categories__list" id="category-list">
+          <span class="text-secondary">加载分类…</span>
+        </div>
+        <a href="/pages/tags/" class="firefly-categories__more">更多 ›</a>
+      </div>
+
+      <div id="main-feed" class="firefly-feed">
+        <p class="text-secondary firefly-feed__loading">加载最新博客…</p>
+      </div>
+    </main>
+
+    <aside class="firefly-layout__right">
+      <div class="firefly-card firefly-widget">
+        <h3 class="firefly-widget__title">📊 站点统计</h3>
+        <ul class="firefly-stats" id="site-stats">
+          <li><span>文章</span><strong>—</strong></li>
+          <li><span>笔记</span><strong>—</strong></li>
+          <li><span>标签</span><strong>—</strong></li>
+          <li><span>分类</span><strong>—</strong></li>
+        </ul>
+      </div>
+
+      <div class="firefly-card firefly-widget">
+        <h3 class="firefly-widget__title">⭐ 精选文章</h3>
+        <div id="sidebar-featured" class="firefly-featured">
+          <p class="text-secondary">加载中…</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/home.js"></script>
+</body>
+</html>

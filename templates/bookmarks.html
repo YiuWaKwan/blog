@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>收藏 — Personal Blog</title>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+  {% set active = 'bookmarks' %}
+  {% include "partials/nav.html" %}
+
+  <main class="page">
+    <div class="container">
+      <h1 class="mb-lg">网站收藏</h1>
+      <p class="text-secondary mb-lg">常用链接与工具，部分收藏需要密码访问</p>
+      <div class="bookmark-grid" id="bookmark-list">
+        <p class="text-secondary">加载中…</p>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/bookmarks.js"></script>
+</body>
+</html>

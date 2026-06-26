@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <title>仪表盘 — 后台管理</title>
+</head>
+<body>
+  <div class="admin-layout">
+    {% set admin_active = 'dashboard' %}
+    {% include "partials/admin-sidebar.html" %}
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-header__title">仪表盘</h1>
+      </div>
+
+      <!-- API: GET /api/admin/get_dashboard -->
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-card__label">博客</div><div class="stat-card__value">12</div></div>
+        <div class="stat-card"><div class="stat-card__label">笔记</div><div class="stat-card__value">28</div></div>
+        <div class="stat-card"><div class="stat-card__label">收藏</div><div class="stat-card__value">15</div></div>
+        <div class="stat-card"><div class="stat-card__label">标签</div><div class="stat-card__value">8</div></div>
+      </div>
+
+      <h2 class="section__title mb-lg">标签概览 Top 10</h2>
+      <!-- API: GET /api/admin/get_tags?sort=total_count -->
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr><th>标签</th><th>博客</th><th>笔记</th><th>收藏</th><th>合计</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>学习笔记</td><td>2</td><td>12</td><td>1</td><td>15</td></tr>
+            <tr><td>Python</td><td>8</td><td>3</td><td>1</td><td>12</td></tr>
+            <tr><td>FastAPI</td><td>6</td><td>2</td><td>0</td><td>8</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

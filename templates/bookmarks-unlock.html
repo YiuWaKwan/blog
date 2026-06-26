@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>访问收藏 — Personal Blog</title>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+
+  <header class="bookmarks-unlock__top">
+    <a href="/pages/" class="bookmarks-unlock__home">← 返回主页</a>
+  </header>
+
+  <main class="page bookmarks-unlock__main">
+    <div class="unlock-card">
+      <div class="unlock-card__icon">🔒</div>
+      <h2 class="mb-lg">收藏页需要密码</h2>
+      <p class="text-secondary mb-lg">请输入访问密码以查看网站收藏</p>
+
+      <form id="bookmarks-unlock-form">
+        <div class="form-group">
+          <input type="password" name="password" class="form-input" placeholder="访问密码" required autofocus>
+        </div>
+        <p id="bookmarks-unlock-error" class="text-secondary" style="color:var(--color-danger);display:none;margin-bottom:12px"></p>
+        <button type="submit" class="btn btn--primary" style="width:100%">解锁</button>
+      </form>
+    </div>
+  </main>
+
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script>
+    document.getElementById('bookmarks-unlock-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const password = new FormData(e.target).get('password');
+      const err = document.getElementById('bookmarks-unlock-error');
+      err.style.display = 'none';
+
+      const result = await apiPost('/api/unlock_bookmarks_page', { password });
+      if (result.code === 0) {
+        window.location.href = '/pages/bookmarks';
+        return;
+      }
+      err.textContent = result.message || '密码错误';
+      err.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

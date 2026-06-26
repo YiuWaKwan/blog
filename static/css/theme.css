@@ -1,0 +1,307 @@
+/* Theme toggle + page background */
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+.theme-toggle:hover {
+  color: var(--color-text);
+  border-color: var(--color-accent);
+  background: var(--color-tag-active);
+}
+
+.theme-toggle__to-dark,
+.theme-toggle__to-light {
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+.theme-toggle__to-light {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle__to-dark {
+  display: none;
+}
+
+html[data-theme="dark"] .theme-toggle__to-light {
+  display: inline;
+}
+
+/* ── 全站背景层：canvas + 遮罩合一，避免分割 ── */
+.site-page {
+  position: relative;
+  min-height: 100vh;
+  background: transparent !important;
+}
+
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.page-bg canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.page-bg__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--color-overlay);
+  opacity: calc(var(--wallpaper-opacity) / 100);
+  backdrop-filter: blur(var(--bg-blur));
+  -webkit-backdrop-filter: blur(var(--bg-blur));
+  transition: opacity 0.35s ease, backdrop-filter 0.35s ease;
+}
+
+.page-bg__wallpaper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/static/img/hero-banner.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: calc(var(--wallpaper-opacity) / 100);
+  display: none;
+}
+
+html[data-theme="dark"] .page-bg__overlay {
+  background: rgba(8, 8, 14, 0.55);
+}
+
+/* ── 壁纸模式 ── */
+html[data-wallpaper-mode="solid"] .page-bg {
+  display: none;
+}
+
+html[data-wallpaper-mode="solid"] .site-page {
+  background: var(--color-bg) !important;
+}
+
+html[data-wallpaper-mode="solid"] .firefly-page {
+  background: var(--color-bg) !important;
+}
+
+html[data-wallpaper-mode="banner"] .page-bg__wallpaper {
+  display: none;
+}
+
+html[data-wallpaper-mode="banner"] .page-bg canvas {
+  display: block;
+}
+
+html[data-wallpaper-mode="fullscreen"] .page-bg canvas {
+  display: none;
+}
+
+html[data-wallpaper-mode="fullscreen"] .page-bg__wallpaper {
+  display: block;
+}
+
+html[data-wallpaper-mode="transparent"] .page-bg canvas {
+  display: block;
+}
+
+html[data-wallpaper-mode="transparent"] .page-bg__wallpaper {
+  display: none;
+}
+
+html[data-wallpaper-mode="transparent"] .page-bg__overlay {
+  opacity: calc(var(--wallpaper-opacity) / 100 * 0.35);
+}
+
+/* 首页横幅模式 */
+html[data-wallpaper-mode="banner"] .firefly-page .page-bg {
+  display: none;
+}
+
+html[data-wallpaper-mode="banner"] .firefly-hero {
+  display: flex;
+}
+
+html[data-wallpaper-mode="fullscreen"] .firefly-hero,
+html[data-wallpaper-mode="transparent"] .firefly-hero,
+html[data-wallpaper-mode="solid"] .firefly-hero {
+  display: none;
+}
+
+html[data-wallpaper-mode="fullscreen"] .firefly-page .page-bg,
+html[data-wallpaper-mode="transparent"] .firefly-page .page-bg {
+  display: block;
+}
+
+html[data-wallpaper-mode="solid"] .firefly-page .page-bg {
+  display: none;
+}
+
+/* ── 文章布局 ── */
+html[data-article-layout="grid"] .firefly-feed {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-md);
+}
+
+html[data-article-layout="grid"] .feed-card {
+  grid-template-columns: 1fr;
+}
+
+html[data-article-layout="grid"] .feed-card__cover-link {
+  order: -1;
+}
+
+html[data-article-layout="grid"] .feed-card__cover {
+  min-height: 160px;
+}
+
+html[data-article-layout="list"] .card-grid {
+  grid-template-columns: 1fr;
+  max-width: var(--max-width-list);
+}
+
+.site-page .nav {
+  position: fixed;
+  z-index: 100;
+  background: var(--color-nav-bg);
+  border-bottom-color: var(--color-border);
+}
+
+.site-page .page,
+.site-page .footer {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+}
+
+/* Glass panel */
+.glass-panel {
+  background: var(--color-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--color-panel-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Public data table */
+.data-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  backdrop-filter: blur(12px);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table th {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-tag-bg);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover td {
+  background: var(--color-tag-active);
+}
+
+.data-table th.num,
+.data-table td.num {
+  text-align: center;
+}
+
+.data-table td.num {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-secondary);
+}
+
+.data-table td.total {
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.data-table a {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.data-table a:hover {
+  color: var(--color-accent);
+}
+
+.tags-page__header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.tags-page__header h1 {
+  margin-bottom: var(--space-sm);
+}
+
+.tags-page__cloud {
+  margin-bottom: var(--space-xl);
+}
+
+.tags-page__table-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+.site-page .card,
+.site-page .bookmark-card,
+.site-page .tag-filter,
+.site-page .feed-card,
+.site-page .unlock-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+.site-page .form-input,
+.site-page .form-textarea,
+.site-page .form-select {
+  background: var(--color-surface-solid);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}

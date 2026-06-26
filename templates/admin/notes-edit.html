@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <title>编辑笔记 — 后台管理</title>
+</head>
+<body>
+  <div class="admin-layout">
+    {% set admin_active = 'notes' %}
+    {% include "partials/admin-sidebar.html" %}
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-header__title">编辑笔记</h1>
+      </div>
+      <!-- API: POST /api/admin/save_note -->
+      <form class="admin-form">
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" name="title" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">分类</label>
+          <select name="category_id" class="form-select">
+            <option value="">无分类</option>
+            <option value="1">Python</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">标签</label>
+          <div class="tag-input-wrapper">
+            <div class="tag-input">
+              <div class="tag-input__chips"></div>
+              <input type="text" class="tag-input__field" placeholder="输入标签名搜索...">
+            </div>
+            <div class="tag-input__suggestions"></div>
+            <input type="hidden" name="tag_ids" value="[]">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">正文</label>
+          <textarea name="content" class="form-textarea" rows="12"></textarea>
+        </div>
+        <div class="form-group form-switch">
+          <input type="checkbox" name="is_private" id="note_private">
+          <label for="note_private">设为私密</label>
+        </div>
+        <div class="admin-form__actions">
+          <button type="submit" class="btn btn--primary">保存</button>
+          <a href="/pages/admin/notes-list" class="btn btn--secondary">取消</a>
+        </div>
+      </form>
+    </main>
+  </div>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/tags.js"></script>
+  <script src="/static/js/admin.js"></script>
+</body>
+</html>

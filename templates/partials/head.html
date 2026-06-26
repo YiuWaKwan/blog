@@ -1,0 +1,37 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>{% block title %}Personal Blog{% endblock %}</title>
+<script>
+  (function () {
+    var theme = 'dark';
+    try {
+      var saved = localStorage.getItem('blog-theme');
+      if (saved === 'light' || saved === 'dark') theme = saved;
+    } catch (_) {}
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.style.colorScheme = theme;
+
+    var cfgKey = 'blog-theme-custom';
+    var cfgDefaults = { hue: 152, wallpaperMode: 'banner', wallpaperOpacity: 80, bgBlur: 10, cardOpacity: 50, articleLayout: 'list' };
+    var cfg = cfgDefaults;
+    try {
+      var raw = localStorage.getItem(cfgKey);
+      if (raw) cfg = Object.assign({}, cfgDefaults, JSON.parse(raw));
+    } catch (_) {}
+    var root = document.documentElement;
+    root.style.setProperty('--theme-hue', String(cfg.hue));
+    root.style.setProperty('--wallpaper-opacity', String(cfg.wallpaperOpacity));
+    root.style.setProperty('--bg-blur', cfg.bgBlur + 'px');
+    root.style.setProperty('--card-opacity', String(cfg.cardOpacity / 100));
+    root.setAttribute('data-wallpaper-mode', cfg.wallpaperMode);
+    root.setAttribute('data-article-layout', cfg.articleLayout);
+  })();
+</script>
+<script src="/static/js/theme.js"></script>
+<script src="/static/js/theme-config.js"></script>
+<link rel="stylesheet" href="/static/css/base.css">
+<link rel="stylesheet" href="/static/css/components.css">
+<link rel="stylesheet" href="/static/css/theme.css">
+<link rel="stylesheet" href="/static/css/theme-customizer.css">
+<link rel="stylesheet" href="/static/css/responsive.css">
+{% block extra_css %}{% endblock %}

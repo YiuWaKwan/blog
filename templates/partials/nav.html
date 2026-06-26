@@ -1,0 +1,33 @@
+<nav class="nav">
+  <div class="nav__inner">
+    <div class="nav__start">
+      <a href="/pages/" class="nav__back">← 返回主页</a>
+      <a href="/pages/" class="nav__logo">Personal Blog</a>
+    </div>
+    <button type="button" class="nav__toggle" id="nav-toggle" aria-label="菜单">☰</button>
+    <form class="nav__search" action="/pages/search" method="get" role="search">
+      <input
+        type="search"
+        name="q"
+        class="nav__search-input"
+        placeholder="搜索"
+        aria-label="搜索"
+        value="{{ search_q or '' }}"
+        required
+      >
+    </form>
+    <div class="nav__links" id="nav-links">
+      <a href="/pages/" class="nav__link {% if active == 'home' %}is-active{% endif %}">首页</a>
+      <a href="/pages/blog/list" class="nav__link {% if active == 'blog' %}is-active{% endif %}">博客</a>
+      <a href="/pages/notes/list" class="nav__link {% if active == 'notes' %}is-active{% endif %}">笔记</a>
+      <a href="/pages/tags/" class="nav__link {% if active == 'tags' %}is-active{% endif %}">标签</a>
+      <div class="nav__actions">
+        {% include "partials/theme-customizer.html" %}
+        <button type="button" class="theme-toggle" aria-label="切换深色模式" onclick="toggleTheme()">
+          <span class="theme-toggle__to-dark" aria-hidden="true">🌙</span>
+          <span class="theme-toggle__to-light" aria-hidden="true">☀️</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

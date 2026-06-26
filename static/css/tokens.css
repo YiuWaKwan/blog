@@ -1,0 +1,79 @@
+:root {
+  --theme-hue: 152;
+  --wallpaper-opacity: 80;
+  --bg-blur: 10px;
+  --card-opacity: 0.5;
+
+  --color-bg: #f5f7fb;
+  --color-surface: rgba(255, 255, 255, var(--card-opacity));
+  --color-surface-solid: #ffffff;
+  --color-text: #1d1d1f;
+  --color-text-secondary: #6e6e73;
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-accent: hsl(var(--theme-hue), 70%, 45%);
+  --color-accent-hover: hsl(var(--theme-hue), 70%, 40%);
+  --color-tag-bg: rgba(0, 0, 0, 0.05);
+  --color-tag-active: hsla(var(--theme-hue), 70%, 45%, 0.12);
+  --color-danger: #ff3b30;
+  --color-success: #34c759;
+  --color-overlay: rgba(245, 247, 251, 0.35);
+  --color-nav-bg: rgba(245, 247, 251, 0.72);
+  --color-panel-border: rgba(255, 255, 255, 0.7);
+
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", monospace;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.1);
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+
+  --max-width-read: 720px;
+  --max-width-list: 1080px;
+  --max-width-wide: 1200px;
+
+  --nav-height: 52px;
+  --transition: 0.2s ease;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #08080e;
+  --color-surface: rgba(22, 22, 32, var(--card-opacity));
+  --color-surface-solid: #161620;
+  --color-text: #f0f0f5;
+  --color-text-secondary: #a0a0ab;
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-accent: hsl(var(--theme-hue), 65%, 62%);
+  --color-accent-hover: hsl(var(--theme-hue), 65%, 68%);
+  --color-tag-bg: rgba(255, 255, 255, 0.07);
+  --color-tag-active: hsla(var(--theme-hue), 65%, 62%, 0.18);
+  --color-overlay: rgba(8, 8, 14, 0.5);
+  --color-nav-bg: rgba(8, 8, 14, 0.82);
+  --color-panel-border: rgba(255, 255, 255, 0.1);
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.6);
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition: 0s;
+  }
+}

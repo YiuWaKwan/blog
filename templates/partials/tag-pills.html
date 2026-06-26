@@ -1,0 +1,9 @@
+{# 用法: {% include "partials/tag-pills.html" with context %}
+   tags = [{name, slug, count?}] #}
+<div class="tag-pills">
+  {% for tag in tags %}
+  <a href="/pages/tags/detail?slug={{ tag.slug }}" class="tag-pill">
+    {{ tag.name }}{% if tag.count is defined %}<span class="tag-pill__count">{{ tag.count }}</span>{% endif %}
+  </a>
+  {% endfor %}
+</div>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <title>标签管理 — 后台管理</title>
+</head>
+<body>
+  <div class="admin-layout">
+    {% set admin_active = 'tags' %}
+    {% include "partials/admin-sidebar.html" %}
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-header__title">标签管理</h1>
+        <button class="btn btn--primary" id="add-tag-btn">新建标签</button>
+      </div>
+
+      <!-- API: GET /api/admin/get_tags  POST /api/admin/save_tag  POST /api/admin/delete_tag -->
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr><th>名称</th><th>Slug</th><th>博客</th><th>笔记</th><th>收藏</th><th>合计</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Python</td><td>python</td><td>8</td><td>3</td><td>1</td><td>12</td>
+              <td class="admin-table__actions"><button>编辑</button><button class="danger">删除</button></td>
+            </tr>
+            <tr>
+              <td>FastAPI</td><td>fastapi</td><td>6</td><td>2</td><td>0</td><td>8</td>
+              <td class="admin-table__actions"><button>编辑</button><button class="danger">删除</button></td>
+            </tr>
+            <tr>
+              <td>学习笔记</td><td>learning</td><td>2</td><td>12</td><td>1</td><td>15</td>
+              <td class="admin-table__actions"><button>编辑</button><button class="danger">删除</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+  <script src="/static/js/api.js"></script>
+</body>
+</html>

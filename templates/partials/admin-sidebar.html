@@ -1,0 +1,12 @@
+<aside class="admin-sidebar" id="admin-sidebar">
+  <div class="admin-sidebar__brand">后台管理</div>
+  <nav class="admin-sidebar__nav">
+    <a href="/pages/admin/dashboard" class="admin-sidebar__link {% if admin_active == 'dashboard' %}is-active{% endif %}">仪表盘</a>
+    <a href="/pages/admin/blog-list" class="admin-sidebar__link {% if admin_active == 'blog' %}is-active{% endif %}">博客</a>
+    <a href="/pages/admin/notes-list" class="admin-sidebar__link {% if admin_active == 'notes' %}is-active{% endif %}">笔记</a>
+    <a href="/pages/admin/bookmarks-list" class="admin-sidebar__link {% if admin_active == 'bookmarks' %}is-active{% endif %}">收藏</a>
+    <a href="/pages/admin/tags-list" class="admin-sidebar__link {% if admin_active == 'tags' %}is-active{% endif %}">标签</a>
+    <a href="/pages/admin/login" class="admin-sidebar__link">退出</a>
+  </nav>
+</aside>
+<div class="admin-sidebar-overlay" id="admin-sidebar-overlay" aria-hidden="true"></div>

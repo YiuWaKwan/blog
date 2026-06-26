@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>解锁内容 — Personal Blog</title>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+  {% set active = 'unlock' %}
+  {% include "partials/nav.html" %}
+  <main class="page">
+    <div class="unlock-card">
+      <div class="unlock-card__icon">🔒</div>
+      <h2 class="mb-lg">此内容需要密码</h2>
+      <p class="text-secondary mb-lg">请输入访问密码以继续阅读</p>
+
+      <form id="unlock-form">
+        <input type="hidden" name="type" id="resource-type" value="">
+        <input type="hidden" name="id" id="resource-id" value="">
+        <div class="form-group">
+          <input type="password" name="password" class="form-input" placeholder="访问密码" required autofocus>
+        </div>
+        <p id="unlock-error" class="text-secondary" style="color:var(--color-danger);display:none;margin-bottom:12px"></p>
+        <button type="submit" class="btn btn--primary" style="width:100%">解锁</button>
+      </form>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('resource-type').value = params.get('type') || 'blog_post';
+    document.getElementById('resource-id').value = params.get('id') || '';
+
+    document.getElementById('unlock-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const result = await apiPost('/api/unlock', {
+        type: form.type.value,
+        id: form.id.value,
+        password: form.password.value,
+      });
+      if (result.code === 0) {
+        const redirect = params.get('redirect');
+        if (redirect) {
+          window.location.href = redirect;
+        } else {
+          history.back();
+        }
+      } else {
+        const err = document.getElementById('unlock-error');
+        err.textContent = result.message || '密码错误';
+        err.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

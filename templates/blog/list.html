@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <title>博客 — Personal Blog</title>
+</head>
+<body class="site-page">
+  {% include "partials/page-bg.html" %}
+  {% set active = 'blog' %}
+  {% include "partials/nav.html" %}
+
+  <main class="page">
+    <div class="container">
+      <h1 class="mb-lg">博客</h1>
+      <div class="layout-with-sidebar">
+        {% set tags = [
+          {'name': 'Python', 'slug': 'python', 'total_count': 12},
+          {'name': 'FastAPI', 'slug': 'fastapi', 'total_count': 8},
+          {'name': 'PostgreSQL', 'slug': 'postgresql', 'total_count': 5},
+          {'name': '学习笔记', 'slug': 'learning', 'total_count': 15}
+        ] %}
+        {% set current_tag = request.query_params.get('tag') if request else none %}
+        {% include "partials/tag-filter.html" %}
+
+        <div>
+          <div class="card-grid" id="post-list">
+            <p class="text-secondary">加载中…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  {% include "partials/footer.html" %}
+  {% include "partials/site-scripts.html" %}
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/tags.js"></script>
+  <script src="/static/js/blog-list.js"></script>
+</body>
+</html>

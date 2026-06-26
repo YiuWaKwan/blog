@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  {% include "partials/head.html" %}
+  <link rel="stylesheet" href="/static/css/admin.css">
+  <title>编辑博客 — 后台管理</title>
+</head>
+<body>
+  <div class="admin-layout">
+    {% set admin_active = 'blog' %}
+    {% include "partials/admin-sidebar.html" %}
+    <main class="admin-main">
+      <div class="admin-header">
+        <h1 class="admin-header__title">编辑博客</h1>
+      </div>
+
+      <form class="admin-form" id="blog-form">
+        <input type="hidden" name="id" value="">
+        <div class="form-group">
+          <label class="form-label">标题</label>
+          <input type="text" name="title" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Slug</label>
+          <input type="text" name="slug" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">摘要</label>
+          <textarea name="excerpt" class="form-textarea" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">正文 (Markdown)</label>
+          <textarea name="content" class="form-textarea" rows="12"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">封面 URL</label>
+          <input type="url" name="cover_image_url" class="form-input" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">标签</label>
+          <div class="tag-input-wrapper">
+            <div class="tag-input">
+              <div class="tag-input__chips"></div>
+              <input type="text" class="tag-input__field" placeholder="输入标签名搜索...">
+            </div>
+            <div class="tag-input__suggestions"></div>
+            <input type="hidden" name="tag_ids" value="[]">
+          </div>
+        </div>
+        <div class="form-group form-switch">
+          <input type="checkbox" name="is_published" id="is_published">
+          <label for="is_published">发布</label>
+        </div>
+        <div class="form-group form-switch">
+          <input type="checkbox" name="is_private" id="is_private">
+          <label for="is_private">设为私密</label>
+        </div>
+        <div class="form-group" id="password-group" style="display:none">
+          <label class="form-label">访问密码</label>
+          <input type="password" name="access_password" class="form-input" placeholder="留空则保持原密码不变">
+        </div>
+        <div class="admin-form__actions">
+          <button type="submit" class="btn btn--primary">保存</button>
+          <a href="/pages/admin/blog-list" class="btn btn--secondary">取消</a>
+        </div>
+      </form>
+    </main>
+  </div>
+  <script src="/static/js/api.js"></script>
+  <script src="/static/js/tags.js"></script>
+  <script src="/static/js/admin.js"></script>
+  <script src="/static/js/admin-blog-edit.js"></script>
+</body>
+</html>
