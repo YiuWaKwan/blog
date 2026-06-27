@@ -94,6 +94,10 @@ CREATE TABLE IF NOT EXISTS bookmarks (
     is_private BOOLEAN NOT NULL DEFAULT FALSE,
     access_password_hash VARCHAR(255),
     sort_order INTEGER NOT NULL DEFAULT 0,
+    visit_count INTEGER NOT NULL DEFAULT 0,
+    deleted_at TIMESTAMPTZ,
+    url_check_fail_days INTEGER NOT NULL DEFAULT 0,
+    last_url_check_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT chk_bookmark_private_password CHECK (
@@ -102,6 +106,8 @@ CREATE TABLE IF NOT EXISTS bookmarks (
 );
 
 CREATE INDEX IF NOT EXISTS idx_bookmarks_category ON bookmarks(category_id, sort_order);
+CREATE INDEX IF NOT EXISTS idx_bookmarks_visit_count ON bookmarks(visit_count DESC);
+CREATE INDEX IF NOT EXISTS idx_bookmarks_not_deleted ON bookmarks(deleted_at) WHERE deleted_at IS NULL;
 
 -- Tags
 CREATE TABLE IF NOT EXISTS tags (

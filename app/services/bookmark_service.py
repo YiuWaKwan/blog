@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from app.core.datetime_utils import utc_now
+from app.core.url_utils import extract_domain_from_url
 from app.models.bookmark import Bookmark
 from app.repositories.bookmark_repository import BookmarkRepository
 from app.repositories.tag_repository import TagRepository
@@ -16,7 +17,7 @@ def resolve_bookmark_title(title: str | None, url: str) -> str:
     cleaned = (title or "").strip()
     if cleaned:
         return cleaned
-    return url.strip()
+    return extract_domain_from_url(url) or url.strip()
 
 
 class BookmarkService(BaseService):
@@ -66,11 +67,31 @@ class BookmarkService(BaseService):
             )
         return items
 
-    def quick_add_bookmark(self, url: str) -> UUID:
+    def record_visit(
+        self,
+        bookmark_id: UUID,
+        unlocked_ids: set[str] | None = None,
+    ) -> None:
+        with self.session_scope() as db:
+            bookmark_repo = BookmarkRepository(db)
+            bookmark = bookmark_repo.get_by_id(bookmark_id)
+            if not bookmark:
+                raise ValueError("收藏不存在")
+            if bookmark.deleted_at is not None:
+                raise ValueError("收藏不存在")
+
+            unlocked = unlocked_ids or set()
+            if bookmark.is_private and str(bookmark.id) not in unlocked:
+                raise ValueError("无权访问该收藏")
+
+            if not bookmark_repo.increment_visit_count(bookmark_id):
+                raise ValueError("收藏不存在")
+
+    def quick_add_bookmark(self, url: str, title: str | None = None) -> UUID:
         cleaned = url.strip()
         if not cleaned:
             raise ValueError("URL 不能为空")
-        return self.save_bookmark(SaveBookmarkRequest(url=cleaned))
+        return self.save_bookmark(SaveBookmarkRequest(url=cleaned, title=title))
 
     def import_bookmarks_from_text(self, text: str) -> dict[str, int | list[str]]:
         lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")

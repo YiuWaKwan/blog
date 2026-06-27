@@ -23,6 +23,7 @@ from app.controllers import (
 )
 from app.core.config import settings
 from app.core.database_service import db_service
+from app.core.scheduler import shutdown_scheduler, start_scheduler
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -31,7 +32,9 @@ BASE_DIR = Path(__file__).resolve().parent
 async def lifespan(_app: FastAPI):
     """应用启动时初始化 DatabaseService 连接池（长连接）。"""
     _ = db_service.engine
+    start_scheduler()
     yield
+    shutdown_scheduler()
 
 
 app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)

@@ -18,9 +18,9 @@ function renderBookmark(b) {
   }
 
   return `
-    <article class="bookmark-card">
-      <a href="${escapeHtml(b.url)}" target="_blank" rel="noopener" class="bookmark-card__title">
-        ${escapeHtml(b.title)}
+    <article class="bookmark-card" data-id="${escapeHtml(b.id)}">
+      <a href="${escapeHtml(b.url)}" target="_blank" rel="noopener" class="bookmark-card__title" data-visit-link title="${escapeHtml(b.url)}">
+        ${escapeHtml(b.title || b.url)}
       </a>
       <button type="button" class="bookmark-card__copy" data-url="${escapeHtml(b.url)}" aria-label="复制链接">
         复制
@@ -80,16 +80,33 @@ async function initBookmarks() {
 
   const searchInput = document.getElementById('bookmarks-search-input');
   const addForm = document.getElementById('bookmarks-add-form');
+  const addTitleInput = document.getElementById('bookmarks-add-title');
   const addUrlInput = document.getElementById('bookmarks-add-url');
   const addError = document.getElementById('bookmarks-add-error');
 
   list.addEventListener('click', (e) => {
     const btn = e.target.closest('.bookmark-card__copy');
-    if (!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    const url = btn.dataset.url;
-    if (url) copyUrl(url, btn);
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      const url = btn.dataset.url;
+      if (url) copyUrl(url, btn);
+      return;
+    }
+
+    const visitLink = e.target.closest('a[data-visit-link]');
+    if (!visitLink) return;
+
+    const card = visitLink.closest('.bookmark-card');
+    const bookmarkId = card?.dataset.id;
+    if (!bookmarkId) return;
+
+    fetch('/api/visit_bookmark', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: bookmarkId }),
+      keepalive: true,
+    }).catch(() => {});
   });
 
   if (searchInput) {
@@ -115,10 +132,14 @@ async function initBookmarks() {
       const url = addUrlInput.value.trim();
       if (!url) return;
 
+      const title = addTitleInput?.value.trim() || '';
+      const payload = { url };
+      if (title) payload.title = title;
+
       const submitBtn = addForm.querySelector('button[type="submit"]');
       if (submitBtn) submitBtn.disabled = true;
 
-      const result = await apiPost('/api/add_bookmark', { url });
+      const result = await apiPost('/api/add_bookmark', payload);
       if (submitBtn) submitBtn.disabled = false;
 
       if (result.code === 403) {
@@ -134,6 +155,7 @@ async function initBookmarks() {
       }
 
       addUrlInput.value = '';
+      if (addTitleInput) addTitleInput.value = '';
       const query = searchInput?.value.trim() || '';
       list.innerHTML = '<p class="text-secondary">加载中…</p>';
       const items = await loadBookmarks(list, query);

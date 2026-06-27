@@ -12,6 +12,14 @@ class Settings(BaseSettings):
     app_name: str = "Personal Blog"
     debug: bool = True
     bookmarks_page_password: str | None = None
+    scheduler_timezone: str = "Asia/Shanghai"
+    bookmark_url_check_enabled: bool = True
+    bookmark_url_check_hour: int = 1
+    bookmark_url_check_timeout_seconds: float = 15.0
+    bookmark_url_check_fail_days: int = 3
+    bookmark_url_check_proxy: str | None = None
+    bookmark_url_check_use_curl_cffi: bool = True
+    bookmark_url_check_use_playwright: bool = False
 
 
 settings = Settings()

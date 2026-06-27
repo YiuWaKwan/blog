@@ -525,6 +525,10 @@
   transition: border-color var(--transition);
 }
 
+.bookmarks-add__input--title {
+  flex: 0 1 220px;
+}
+
 .bookmarks-add__input:focus {
   border-color: var(--color-accent);
 }

@@ -31,6 +31,10 @@ class Bookmark(Base):
     is_private: Mapped[bool] = mapped_column(Boolean, default=False)
     access_password_hash: Mapped[str | None] = mapped_column(String(255))
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    visit_count: Mapped[int] = mapped_column(Integer, default=0)
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    url_check_fail_days: Mapped[int] = mapped_column(Integer, default=0)
+    last_url_check_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now)
 

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 
 from app.core.response import error, success
 from app.dependencies import get_unlocked_bookmark_ids, require_bookmarks_page_access
-from app.schemas.requests.bookmark import AddBookmarkRequest
+from app.schemas.requests.bookmark import AddBookmarkRequest, VisitBookmarkRequest
 from app.services.bookmark_service import BookmarkService
 
 router = APIRouter(prefix="/api", tags=["bookmark"])
@@ -33,7 +33,20 @@ def add_bookmark(
     _: None = Depends(require_bookmarks_page_access),
 ) -> dict[str, Any]:
     try:
-        bookmark_id = BookmarkService().quick_add_bookmark(body.url)
+        bookmark_id = BookmarkService().quick_add_bookmark(body.url, body.title)
     except ValueError as exc:
         return error(400, str(exc))
     return success({"id": str(bookmark_id)})
+
+
+@router.post("/visit_bookmark")
+def visit_bookmark(
+    body: VisitBookmarkRequest,
+    unlocked_ids: set[str] = Depends(get_unlocked_bookmark_ids),
+    _: None = Depends(require_bookmarks_page_access),
+) -> dict[str, Any]:
+    try:
+        BookmarkService().record_visit(body.id, unlocked_ids)
+    except ValueError as exc:
+        return error(400, str(exc))
+    return success()
