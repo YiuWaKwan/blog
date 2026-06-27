@@ -18,8 +18,6 @@ class Settings(BaseSettings):
     bookmark_url_check_timeout_seconds: float = 15.0
     bookmark_url_check_fail_days: int = 3
     bookmark_url_check_proxy: str | None = None
-    bookmark_url_check_use_curl_cffi: bool = True
-    bookmark_url_check_use_playwright: bool = False
 
 
 settings = Settings()

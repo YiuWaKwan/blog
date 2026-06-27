@@ -33,8 +33,6 @@ class BookmarkUrlCheckService(BaseService):
                 bookmark.url,
                 timeout=timeout,
                 proxy=proxy,
-                use_curl_cffi=settings.bookmark_url_check_use_curl_cffi,
-                use_playwright=settings.bookmark_url_check_use_playwright,
             )
 
             if result.outcome is FetchOutcome.SUCCESS:
