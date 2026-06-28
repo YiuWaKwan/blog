@@ -29,10 +29,57 @@ function renderBookmark(b) {
   `;
 }
 
-function renderBookmarkList(items, listEl) {
-  listEl.innerHTML = items.length
-    ? items.map(renderBookmark).join('')
-    : '<p class="text-secondary">暂无收藏</p>';
+function groupBookmarks(items, categories) {
+  const groups = new Map();
+
+  for (const category of categories) {
+    groups.set(category.slug, {
+      name: category.name,
+      slug: category.slug,
+      sortOrder: category.sort_order ?? 0,
+      items: [],
+    });
+  }
+
+  for (const item of items) {
+    const slug = item.category_slug || 'default';
+    const name = item.category_name || '默认';
+    if (!groups.has(slug)) {
+      groups.set(slug, {
+        name,
+        slug,
+        sortOrder: 999,
+        items: [],
+      });
+    }
+    groups.get(slug).items.push(item);
+  }
+
+  return [...groups.values()]
+    .filter((group) => group.items.length > 0)
+    .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name, 'zh-CN'));
+}
+
+function renderBookmarkGroups(items, categories, listEl) {
+  if (!items.length) {
+    listEl.innerHTML = '<p class="text-secondary">暂无收藏</p>';
+    return;
+  }
+
+  const groups = groupBookmarks(items, categories);
+  if (!groups.length) {
+    listEl.innerHTML = '<p class="text-secondary">暂无收藏</p>';
+    return;
+  }
+
+  listEl.innerHTML = groups.map((group) => `
+    <section class="bookmark-group" data-category="${escapeHtml(group.slug)}">
+      <h2 class="bookmark-group__title">${escapeHtml(group.name)}</h2>
+      <div class="bookmark-grid">
+        ${group.items.map(renderBookmark).join('')}
+      </div>
+    </section>
+  `).join('');
 }
 
 async function copyUrl(url, btn) {
@@ -59,6 +106,31 @@ async function copyUrl(url, btn) {
 }
 
 let searchTimer = null;
+let cachedCategories = [];
+
+async function loadCategories() {
+  const result = await apiGet('/api/get_bookmark_categories');
+  if (result.code === 403) {
+    window.location.reload();
+    return [];
+  }
+  if (result.code !== 0) return [];
+  cachedCategories = result.data?.list || [];
+  return cachedCategories;
+}
+
+function populateCategorySelect(selectEl, categories, selectedId = '') {
+  if (!selectEl) return;
+  const selected = selectedId ? String(selectedId) : '';
+  const defaultCategory = categories.find((c) => c.slug === 'default') || categories[0];
+  const fallbackId = defaultCategory ? String(defaultCategory.id) : '';
+
+  selectEl.innerHTML = categories.map((category) => {
+    const id = String(category.id);
+    const isSelected = selected ? id === selected : id === fallbackId;
+    return `<option value="${escapeHtml(id)}"${isSelected ? ' selected' : ''}>${escapeHtml(category.name)}</option>`;
+  }).join('');
+}
 
 async function loadBookmarks(listEl, query = '') {
   const params = query ? { q: query } : {};
@@ -74,6 +146,12 @@ async function loadBookmarks(listEl, query = '') {
   return result.data?.list || [];
 }
 
+async function refreshBookmarkList(listEl, query = '') {
+  listEl.innerHTML = '<p class="text-secondary">加载中…</p>';
+  const items = await loadBookmarks(listEl, query);
+  if (items) renderBookmarkGroups(items, cachedCategories, listEl);
+}
+
 async function initBookmarks() {
   const list = document.getElementById('bookmark-list');
   if (!list) return;
@@ -82,7 +160,11 @@ async function initBookmarks() {
   const addForm = document.getElementById('bookmarks-add-form');
   const addTitleInput = document.getElementById('bookmarks-add-title');
   const addUrlInput = document.getElementById('bookmarks-add-url');
+  const addCategorySelect = document.getElementById('bookmarks-add-category');
   const addError = document.getElementById('bookmarks-add-error');
+
+  const categories = await loadCategories();
+  populateCategorySelect(addCategorySelect, categories);
 
   list.addEventListener('click', (e) => {
     const btn = e.target.closest('.bookmark-card__copy');
@@ -114,9 +196,7 @@ async function initBookmarks() {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(async () => {
         const query = searchInput.value.trim();
-        list.innerHTML = '<p class="text-secondary">加载中…</p>';
-        const items = await loadBookmarks(list, query);
-        if (items) renderBookmarkList(items, list);
+        await refreshBookmarkList(list, query);
       }, 300);
     });
   }
@@ -133,8 +213,10 @@ async function initBookmarks() {
       if (!url) return;
 
       const title = addTitleInput?.value.trim() || '';
+      const categoryId = addCategorySelect?.value || '';
       const payload = { url };
       if (title) payload.title = title;
+      if (categoryId) payload.category_id = categoryId;
 
       const submitBtn = addForm.querySelector('button[type="submit"]');
       if (submitBtn) submitBtn.disabled = true;
@@ -157,14 +239,11 @@ async function initBookmarks() {
       addUrlInput.value = '';
       if (addTitleInput) addTitleInput.value = '';
       const query = searchInput?.value.trim() || '';
-      list.innerHTML = '<p class="text-secondary">加载中…</p>';
-      const items = await loadBookmarks(list, query);
-      if (items) renderBookmarkList(items, list);
+      await refreshBookmarkList(list, query);
     });
   }
 
-  const items = await loadBookmarks(list);
-  if (items) renderBookmarkList(items, list);
+  await refreshBookmarkList(list);
 }
 
 document.addEventListener('DOMContentLoaded', initBookmarks);

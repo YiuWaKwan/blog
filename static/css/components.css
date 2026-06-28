@@ -529,6 +529,24 @@
   flex: 0 1 220px;
 }
 
+.bookmarks-add__select {
+  flex: 0 1 140px;
+  min-width: 0;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.bookmarks-add__select:focus {
+  border-color: var(--color-accent);
+}
+
 .bookmarks-add__input:focus {
   border-color: var(--color-accent);
 }
@@ -552,6 +570,21 @@
   flex-direction: column;
   gap: var(--space-sm);
   max-width: 720px;
+}
+
+.bookmark-groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  max-width: 720px;
+}
+
+.bookmark-group__title {
+  margin: 0 0 var(--space-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .bookmark-card {

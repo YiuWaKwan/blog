@@ -24,3 +24,10 @@ class BookmarkDetailResult(BaseModel):
     requires_unlock: bool = False
     bookmark_id: UUID | None = None
     detail: BookmarkListItem | None = None
+
+
+class BookmarkCategoryBrief(BaseModel):
+    id: UUID
+    name: str
+    slug: str
+    sort_order: int = 0

@@ -27,13 +27,25 @@ def get_bookmarks(
     return success({"list": [item.model_dump() for item in items]})
 
 
+@router.get("/get_bookmark_categories")
+def get_bookmark_categories(
+    _: None = Depends(require_bookmarks_page_access),
+) -> dict[str, Any]:
+    items = BookmarkService().list_categories()
+    return success({"list": items})
+
+
 @router.post("/add_bookmark")
 def add_bookmark(
     body: AddBookmarkRequest,
     _: None = Depends(require_bookmarks_page_access),
 ) -> dict[str, Any]:
     try:
-        bookmark_id = BookmarkService().quick_add_bookmark(body.url, body.title)
+        bookmark_id = BookmarkService().quick_add_bookmark(
+            body.url,
+            body.title,
+            body.category_id,
+        )
     except ValueError as exc:
         return error(400, str(exc))
     return success({"id": str(bookmark_id)})

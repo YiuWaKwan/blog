@@ -9,6 +9,9 @@ from app.models.bookmark import Bookmark, BookmarkCategory
 from app.models.tag import Tag
 from app.repositories.base_repository import BaseRepository
 
+DEFAULT_BOOKMARK_CATEGORY_SLUG = "default"
+DEFAULT_BOOKMARK_CATEGORY_NAME = "默认"
+
 
 class BookmarkRepository(BaseRepository):
     @staticmethod
@@ -122,6 +125,46 @@ class BookmarkRepository(BaseRepository):
                 )
             ).all()
         )
+
+    def get_category_by_slug(self, slug: str) -> BookmarkCategory | None:
+        return self.db.scalars(
+            select(BookmarkCategory).where(BookmarkCategory.slug == slug)
+        ).first()
+
+    def get_or_create_default_category(self) -> BookmarkCategory:
+        existing = self.get_category_by_slug(DEFAULT_BOOKMARK_CATEGORY_SLUG)
+        if existing:
+            return existing
+
+        category = BookmarkCategory(
+            name=DEFAULT_BOOKMARK_CATEGORY_NAME,
+            slug=DEFAULT_BOOKMARK_CATEGORY_SLUG,
+            sort_order=0,
+        )
+        self.db.add(category)
+        self.db.flush()
+        return category
+
+    def has_uncategorized_bookmarks(self) -> bool:
+        count = self.db.scalar(
+            self._active_only(
+                select(func.count())
+                .select_from(Bookmark)
+                .where(Bookmark.category_id.is_(None))
+            )
+        )
+        return bool(count)
+
+    def assign_uncategorized_to_category(self, category_id: UUID) -> int:
+        result = self.db.execute(
+            update(Bookmark)
+            .where(
+                Bookmark.category_id.is_(None),
+                Bookmark.deleted_at.is_(None),
+            )
+            .values(category_id=category_id, updated_at=utc_now())
+        )
+        return result.rowcount or 0
 
     def save(self, bookmark: Bookmark) -> Bookmark:
         self.db.add(bookmark)

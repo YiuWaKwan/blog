@@ -30,6 +30,13 @@
             />
           </form>
           <form class="bookmarks-add" id="bookmarks-add-form">
+            <select
+              id="bookmarks-add-category"
+              class="bookmarks-add__select"
+              aria-label="分组"
+            >
+              <option value="">加载分组…</option>
+            </select>
             <input
               type="text"
               id="bookmarks-add-title"
@@ -50,7 +57,7 @@
           <p id="bookmarks-add-error" class="bookmarks-add__error" hidden></p>
         </div>
 
-        <div class="bookmark-grid" id="bookmark-list">
+        <div class="bookmark-groups" id="bookmark-list">
           <p class="text-secondary">加载中…</p>
         </div>
       </div>

@@ -21,6 +21,32 @@ def resolve_bookmark_title(title: str | None, url: str) -> str:
 
 
 class BookmarkService(BaseService):
+    def ensure_default_category_if_needed(self) -> None:
+        with self.session_scope() as db:
+            repo = BookmarkRepository(db)
+            if not repo.has_uncategorized_bookmarks():
+                return
+            default = repo.get_or_create_default_category()
+            repo.assign_uncategorized_to_category(default.id)
+
+    def get_default_category_id(self) -> UUID:
+        with self.session_scope() as db:
+            return BookmarkRepository(db).get_or_create_default_category().id
+
+    def list_categories(self) -> list[dict]:
+        self.ensure_default_category_if_needed()
+        with self.read_session() as db:
+            categories = BookmarkRepository(db).list_categories()
+        return [
+            {
+                "id": str(c.id),
+                "name": c.name,
+                "slug": c.slug,
+                "sort_order": c.sort_order,
+            }
+            for c in categories
+        ]
+
     def list_bookmarks(
         self,
         tag_slug: str | None = None,
@@ -28,6 +54,7 @@ class BookmarkService(BaseService):
         query: str | None = None,
         unlocked_ids: set[str] | None = None,
     ) -> list[BookmarkListItem]:
+        self.ensure_default_category_if_needed()
         with self.read_session() as db:
             bookmarks = BookmarkRepository(db).list_public(
                 tag_slug=tag_slug,
@@ -87,11 +114,23 @@ class BookmarkService(BaseService):
             if not bookmark_repo.increment_visit_count(bookmark_id):
                 raise ValueError("收藏不存在")
 
-    def quick_add_bookmark(self, url: str, title: str | None = None) -> UUID:
+    def quick_add_bookmark(
+        self,
+        url: str,
+        title: str | None = None,
+        category_id: UUID | None = None,
+    ) -> UUID:
         cleaned = url.strip()
         if not cleaned:
             raise ValueError("URL 不能为空")
-        return self.save_bookmark(SaveBookmarkRequest(url=cleaned, title=title))
+        resolved_category_id = category_id or self.get_default_category_id()
+        return self.save_bookmark(
+            SaveBookmarkRequest(
+                url=cleaned,
+                title=title,
+                category_id=resolved_category_id,
+            )
+        )
 
     def import_bookmarks_from_text(self, text: str) -> dict[str, int | list[str]]:
         lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
@@ -115,16 +154,7 @@ class BookmarkService(BaseService):
         return {"imported": imported, "skipped": skipped, "errors": errors}
 
     def list_categories_for_admin(self) -> list[dict]:
-        with self.read_session() as db:
-            categories = BookmarkRepository(db).list_categories()
-        return [
-            {
-                "id": str(c.id),
-                "name": c.name,
-                "slug": c.slug,
-            }
-            for c in categories
-        ]
+        return self.list_categories()
 
     def get_bookmark_for_admin(self, bookmark_id: UUID) -> AdminBookmarkDetail | None:
         with self.read_session() as db:
