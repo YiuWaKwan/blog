@@ -76,6 +76,8 @@ class AdminBookmarkListItem(BaseModel):
     url: str
     description: str | None = None
     is_private: bool = False
+    category_id: UUID | None = None
+    category_slug: str | None = None
     category_name: str | None = None
     tags: list[TagBrief] = Field(default_factory=list)
 

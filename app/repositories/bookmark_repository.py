@@ -46,7 +46,7 @@ class BookmarkRepository(BaseRepository):
             self.db.scalars(
                 stmt.order_by(
                     Bookmark.visit_count.desc(),
-                    Bookmark.sort_order,
+                    Bookmark.created_at.desc(),
                     Bookmark.title,
                 )
             ).unique().all()
@@ -131,6 +131,36 @@ class BookmarkRepository(BaseRepository):
             select(BookmarkCategory).where(BookmarkCategory.slug == slug)
         ).first()
 
+    def get_category_by_id(self, category_id: UUID) -> BookmarkCategory | None:
+        return self.db.scalars(
+            select(BookmarkCategory).where(BookmarkCategory.id == category_id)
+        ).first()
+
+    def slug_exists(self, slug: str, exclude_id: UUID | None = None) -> bool:
+        stmt = select(BookmarkCategory.id).where(BookmarkCategory.slug == slug)
+        if exclude_id:
+            stmt = stmt.where(BookmarkCategory.id != exclude_id)
+        return self.db.scalar(stmt) is not None
+
+    def next_category_sort_order(self) -> int:
+        max_order = self.db.scalar(select(func.max(BookmarkCategory.sort_order)))
+        return (max_order or 0) + 1
+
+    def create_category(
+        self,
+        name: str,
+        slug: str,
+        sort_order: int | None = None,
+    ) -> BookmarkCategory:
+        category = BookmarkCategory(
+            name=name,
+            slug=slug,
+            sort_order=sort_order if sort_order is not None else self.next_category_sort_order(),
+        )
+        self.db.add(category)
+        self.db.flush()
+        return category
+
     def get_or_create_default_category(self) -> BookmarkCategory:
         existing = self.get_category_by_slug(DEFAULT_BOOKMARK_CATEGORY_SLUG)
         if existing:
@@ -165,6 +195,20 @@ class BookmarkRepository(BaseRepository):
             .values(category_id=category_id, updated_at=utc_now())
         )
         return result.rowcount or 0
+
+    def count_active_by_category(self) -> dict[UUID, int]:
+        rows = self.db.execute(
+            self._active_only(
+                select(Bookmark.category_id, func.count())
+                .select_from(Bookmark)
+                .group_by(Bookmark.category_id)
+            )
+        ).all()
+        return {
+            category_id: count
+            for category_id, count in rows
+            if category_id is not None
+        }
 
     def save(self, bookmark: Bookmark) -> Bookmark:
         self.db.add(bookmark)

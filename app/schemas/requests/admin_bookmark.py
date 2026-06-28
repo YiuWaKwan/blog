@@ -22,3 +22,10 @@ class DeleteBookmarkRequest(BaseModel):
 
 class ImportBookmarksRequest(BaseModel):
     text: str
+
+
+class SaveBookmarkCategoryRequest(BaseModel):
+    id: UUID | None = None
+    name: str
+    slug: str | None = None
+    sort_order: int | None = None

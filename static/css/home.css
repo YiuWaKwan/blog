@@ -789,6 +789,74 @@ html[data-wallpaper-mode="fullscreen"] .firefly-page {
   border-color: var(--ff-accent);
 }
 
+.firefly-page .bookmarks-add__picker-btn {
+  background: var(--ff-card);
+  border-color: var(--ff-border);
+  color: var(--color-text);
+}
+
+.firefly-page .bookmarks-add__picker-btn:hover,
+.firefly-page .bookmarks-add__picker.is-open .bookmarks-add__picker-btn {
+  border-color: var(--ff-accent);
+}
+
+.firefly-page .bookmarks-add__picker-menu {
+  background: var(--ff-card);
+  border-color: var(--ff-border);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+.firefly-page .bookmarks-add__picker-option:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.firefly-page .bookmarks-add__picker-option.is-selected {
+  color: var(--ff-accent);
+  background: var(--ff-accent-dim);
+}
+
+.firefly-page .bookmarks-modal__dialog {
+  background: var(--ff-card);
+  border-color: var(--ff-border);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45);
+}
+
+.firefly-page .bookmarks-modal__header,
+.firefly-page .bookmarks-modal__actions {
+  border-color: var(--ff-border);
+}
+
+.firefly-page .bookmarks-modal__form .bookmarks-add__input {
+  background: var(--ff-bg);
+  border-color: var(--ff-border);
+}
+
+.firefly-page .bookmarks-modal__form .bookmarks-add__input:focus {
+  border-color: var(--ff-accent);
+}
+
+.firefly-page .bookmarks-modal__form .bookmarks-add__picker-btn {
+  background: var(--ff-bg);
+}
+
+.firefly-page .bookmark-groups {
+  max-width: none;
+}
+
+.firefly-page .bookmark-group {
+  background: var(--ff-card);
+  border-color: var(--ff-border);
+}
+
+.firefly-page .bookmark-group__header:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.firefly-page .bookmark-group__count {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ff-text-muted);
+}
+
 .firefly-page .glass-panel {
   background: var(--ff-card);
   border-color: var(--ff-border);

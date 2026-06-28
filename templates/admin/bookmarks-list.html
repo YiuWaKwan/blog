@@ -16,6 +16,35 @@
       </div>
 
       <details class="admin-import-panel">
+        <summary class="admin-import-panel__summary">分组管理</summary>
+        <form class="admin-import-panel__form" id="bookmark-category-form">
+          <p class="admin-import-panel__hint">新增收藏分组，Slug 留空则根据名称自动生成。</p>
+          <div class="admin-import-panel__actions">
+            <input
+              type="text"
+              id="bookmark-category-name"
+              class="form-input admin-category-form__input"
+              placeholder="分组名称"
+              required
+              autocomplete="off"
+            />
+            <input
+              type="text"
+              id="bookmark-category-slug"
+              class="form-input admin-category-form__input"
+              placeholder="Slug（可选）"
+              autocomplete="off"
+            />
+            <button type="submit" class="btn btn--primary">新增分组</button>
+            <span id="bookmark-category-result" class="admin-import-panel__result" hidden></span>
+          </div>
+        </form>
+        <ul class="admin-category-list" id="bookmark-categories-list">
+          <li class="admin-category-list__loading">加载中…</li>
+        </ul>
+      </details>
+
+      <details class="admin-import-panel">
         <summary class="admin-import-panel__summary">批量导入 URL</summary>
         <form class="admin-import-panel__form" id="bookmarks-import-form">
           <p class="admin-import-panel__hint">每行一个 URL，空行和以 # 开头的行会跳过。无协议时自动补全 https://</p>
@@ -32,15 +61,13 @@
         </form>
       </details>
 
-      <div class="table-wrapper">
-        <table class="admin-table">
-          <thead>
-            <tr><th>标题</th><th>URL</th><th>分类</th><th>状态</th><th>标签</th><th>操作</th></tr>
-          </thead>
-          <tbody id="bookmarks-list-body">
-            <tr><td colspan="6">加载中…</td></tr>
-          </tbody>
-        </table>
+      <div class="admin-category-filter" id="bookmark-category-filter" hidden>
+        <span class="admin-category-filter__label">按分组筛选</span>
+        <div class="admin-category-filter__pills" id="bookmark-category-filter-pills"></div>
+      </div>
+
+      <div class="admin-bookmark-groups" id="bookmarks-grouped-list">
+        <p class="admin-bookmark-groups__loading">加载中…</p>
       </div>
     </main>
   </div>

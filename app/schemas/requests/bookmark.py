@@ -11,3 +11,7 @@ class AddBookmarkRequest(BaseModel):
 
 class VisitBookmarkRequest(BaseModel):
     id: UUID
+
+
+class DeleteBookmarkRequest(BaseModel):
+    id: UUID

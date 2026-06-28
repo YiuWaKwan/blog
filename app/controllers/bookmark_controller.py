@@ -4,7 +4,11 @@ from fastapi import APIRouter, Depends
 
 from app.core.response import error, success
 from app.dependencies import get_unlocked_bookmark_ids, require_bookmarks_page_access
-from app.schemas.requests.bookmark import AddBookmarkRequest, VisitBookmarkRequest
+from app.schemas.requests.bookmark import (
+    AddBookmarkRequest,
+    DeleteBookmarkRequest,
+    VisitBookmarkRequest,
+)
 from app.services.bookmark_service import BookmarkService
 
 router = APIRouter(prefix="/api", tags=["bookmark"])
@@ -61,4 +65,16 @@ def visit_bookmark(
         BookmarkService().record_visit(body.id, unlocked_ids)
     except ValueError as exc:
         return error(400, str(exc))
+    return success()
+
+
+@router.post("/delete_bookmark")
+def delete_bookmark(
+    body: DeleteBookmarkRequest,
+    _: None = Depends(require_bookmarks_page_access),
+) -> dict[str, Any]:
+    try:
+        BookmarkService().soft_delete_bookmark(body.id)
+    except ValueError as exc:
+        return error(404, str(exc))
     return success()

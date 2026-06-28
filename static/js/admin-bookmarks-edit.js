@@ -16,7 +16,7 @@ async function loadCategories(selectEl, selectedId) {
   const res = await adminGet('get_bookmark_categories');
   const categories = res.code === 0 ? (res.data?.list || []) : [];
   const selected = selectedId ? String(selectedId) : '';
-  selectEl.innerHTML = '<option value="">无分类</option>' + categories.map((c) =>
+  selectEl.innerHTML = '<option value="">无分组</option>' + categories.map((c) =>
     `<option value="${c.id}"${String(c.id) === selected ? ' selected' : ''}>${c.name}</option>`
   ).join('');
 }

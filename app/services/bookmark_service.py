@@ -2,13 +2,17 @@ from uuid import UUID
 
 from app.core.datetime_utils import utc_now
 from app.core.url_utils import extract_domain_from_url
+from app.core.slug_utils import slugify
 from app.models.bookmark import Bookmark
 from app.repositories.bookmark_repository import BookmarkRepository
 from app.repositories.tag_repository import TagRepository
 from app.schemas.admin import AdminBookmarkDetail, AdminBookmarkListItem
 from app.schemas.bookmark import BookmarkDetailResult, BookmarkListItem
 from app.schemas.common import TagBrief
-from app.schemas.requests.admin_bookmark import SaveBookmarkRequest
+from app.schemas.requests.admin_bookmark import (
+    SaveBookmarkCategoryRequest,
+    SaveBookmarkRequest,
+)
 from app.services.base_service import BaseService
 from app.services.content_helpers import apply_private_password
 
@@ -36,13 +40,16 @@ class BookmarkService(BaseService):
     def list_categories(self) -> list[dict]:
         self.ensure_default_category_if_needed()
         with self.read_session() as db:
-            categories = BookmarkRepository(db).list_categories()
+            repo = BookmarkRepository(db)
+            categories = repo.list_categories()
+            counts = repo.count_active_by_category()
         return [
             {
                 "id": str(c.id),
                 "name": c.name,
                 "slug": c.slug,
                 "sort_order": c.sort_order,
+                "bookmark_count": counts.get(c.id, 0),
             }
             for c in categories
         ]
@@ -156,6 +163,44 @@ class BookmarkService(BaseService):
     def list_categories_for_admin(self) -> list[dict]:
         return self.list_categories()
 
+    def save_bookmark_category(self, body: SaveBookmarkCategoryRequest) -> UUID:
+        name = body.name.strip()
+        if not name:
+            raise ValueError("分组名称不能为空")
+
+        with self.session_scope() as db:
+            repo = BookmarkRepository(db)
+
+            if body.id:
+                category = repo.get_category_by_id(body.id)
+                if not category:
+                    raise ValueError("分组不存在")
+                base_slug = (body.slug or "").strip() or slugify(name)
+                slug = self._unique_category_slug(repo, base_slug, body.id)
+                category.name = name
+                category.slug = slug
+                if body.sort_order is not None:
+                    category.sort_order = body.sort_order
+                return category.id
+
+            base_slug = (body.slug or "").strip() or slugify(name)
+            slug = self._unique_category_slug(repo, base_slug)
+            category = repo.create_category(name, slug, body.sort_order)
+            return category.id
+
+    @staticmethod
+    def _unique_category_slug(
+        repo: BookmarkRepository,
+        base_slug: str,
+        exclude_id: UUID | None = None,
+    ) -> str:
+        slug = base_slug or slugify("category")
+        counter = 2
+        while repo.slug_exists(slug, exclude_id):
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+        return slug
+
     def get_bookmark_for_admin(self, bookmark_id: UUID) -> AdminBookmarkDetail | None:
         with self.read_session() as db:
             bookmark = BookmarkRepository(db).get_by_id(bookmark_id)
@@ -180,6 +225,7 @@ class BookmarkService(BaseService):
         self,
         category_id: UUID | None = None,
     ) -> list[AdminBookmarkListItem]:
+        self.ensure_default_category_if_needed()
         with self.read_session() as db:
             bookmarks = BookmarkRepository(db).list_for_admin(category_id)
 
@@ -190,6 +236,8 @@ class BookmarkService(BaseService):
                 url=b.url,
                 description=b.description,
                 is_private=b.is_private,
+                category_id=b.category_id,
+                category_slug=b.category.slug if b.category else None,
                 category_name=b.category.name if b.category else None,
                 tags=[TagBrief.model_validate(t) for t in b.tags],
             )
@@ -229,6 +277,11 @@ class BookmarkService(BaseService):
             bookmark.tags = tag_repo.resolve_tags(body.tag_ids, body.tag_names)
             bookmark_repo.save(bookmark)
             return bookmark.id
+
+    def soft_delete_bookmark(self, bookmark_id: UUID) -> None:
+        with self.session_scope() as db:
+            if not BookmarkRepository(db).soft_delete(bookmark_id):
+                raise ValueError("收藏不存在")
 
     def delete_bookmark(self, bookmark_id: UUID) -> None:
         with self.session_scope() as db:

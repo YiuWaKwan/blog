@@ -256,12 +256,31 @@
     max-width: none;
   }
 
-  .bookmarks-add {
+  .bookmarks-toolbar__row {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .bookmarks-add__btn {
+  .bookmarks-toolbar__add-btn {
+    width: 100%;
+  }
+
+  .bookmarks-modal {
+    padding: var(--space-md);
+    align-items: flex-end;
+  }
+
+  .bookmarks-modal__dialog {
+    max-width: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .bookmarks-modal__actions {
+    flex-direction: column-reverse;
+  }
+
+  .bookmarks-modal__actions .btn {
     width: 100%;
   }
 
@@ -285,6 +304,12 @@
     min-height: 36px;
     min-width: 52px;
   }
+
+  .bookmark-card__delete {
+    padding: 8px 12px;
+    min-height: 36px;
+    min-width: 52px;
+  }
 }
 
 @media (max-width: 380px) {
@@ -294,6 +319,10 @@
   }
 
   .bookmark-card__copy {
+    align-self: flex-end;
+  }
+
+  .bookmark-card__actions {
     align-self: flex-end;
   }
 }

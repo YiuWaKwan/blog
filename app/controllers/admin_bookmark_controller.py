@@ -7,6 +7,7 @@ from app.core.response import error, success
 from app.schemas.requests.admin_bookmark import (
     DeleteBookmarkRequest,
     ImportBookmarksRequest,
+    SaveBookmarkCategoryRequest,
     SaveBookmarkRequest,
 )
 from app.services.bookmark_service import BookmarkService
@@ -58,3 +59,12 @@ def import_bookmarks(body: ImportBookmarksRequest) -> dict[str, Any]:
 def admin_get_bookmark_categories() -> dict[str, Any]:
     items = BookmarkService().list_categories_for_admin()
     return success({"list": items})
+
+
+@router.post("/save_bookmark_category")
+def save_bookmark_category(body: SaveBookmarkCategoryRequest) -> dict[str, Any]:
+    try:
+        category_id = BookmarkService().save_bookmark_category(body)
+    except ValueError as exc:
+        return error(400, str(exc))
+    return success({"id": str(category_id)})
